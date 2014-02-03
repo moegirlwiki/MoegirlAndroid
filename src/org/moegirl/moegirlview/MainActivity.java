@@ -414,7 +414,7 @@ public class MainActivity extends Activity {
 					+ "<script>if(window.mw){\nmw.loader.load([\"mediawiki.action.view.postEdit\",\"mediawiki.user\",\"mediawiki.hidpi\",\"mediawiki.page.ready\",\"mediawiki.searchSuggest\",\"ext.gadget.Force_preview\",\"ext.gadget.Searchbox-popout\",\"ext.gadget.Backtotop\",\"ext.FancyBoxThumbs\",\"ext.ajaxpoll\"],null,true);\n}</script>\n"
 					+ "<script>\nvar fbtFancyBoxOptions = {\"openEffect\":\"elastic\",\"closeEffect\":\"elastic\",\"helpers\":{\"title\":{\"type\":\"inside\"}}};\n</script>\n"
 					+ "<script src=\"//m.moegirl.org/load.php?debug=false&amp;lang=zh-cn&amp;modules=site&amp;only=scripts&amp;skin=wptouch&amp;*\"></script>\n"
-					+ "<script>$(\".heimu\").toggle(function(event){$(event.target).css(\"background-color\",\"transparent\");},function(event){$(event.target).css(\"background-color\",\"#000\");});</script>"
+					+ "<script>$(\".heimu\").toggle(function(event){if($(event.target).hasClass(\"heimu\"))$(event.target).css(\"background-color\",\"transparent\"); if($(event.target).attr(\"href\")!=undefined)location.href=$(event.target).attr(\"href\");},function(event){if($(event.target).hasClass(\"heimu\"))$(event.target).css(\"background-color\",\"#000\");if($(event.target).attr(\"href\")!=undefined)location.href=$(event.target).attr(\"href\");});</script>"
 					+ "</body></html>";
 
 			HttpClient httpClient1 = new DefaultHttpClient();
