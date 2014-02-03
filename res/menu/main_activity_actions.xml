@@ -1,0 +1,37 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- Search, should appear as action button -->
+    <item
+        android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:showAsAction="always"
+        android:title="@string/search_lable"/>
+    <item
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_menu_refresh"
+        android:showAsAction="ifRoom"
+        android:title="@string/refresh_lable"/>
+    <item
+        android:id="@+id/action_share"
+        android:icon="@android:drawable/ic_menu_share"
+        android:showAsAction="always"
+        android:title="@string/share_lable"/>
+    <!-- Settings, should always be in the overflow -->
+
+    <item
+        android:id="@+id/action_edit"
+        android:showAsAction="never"
+        android:title="@string/action_edit"
+        android:visible="false"/>
+    <item
+        android:id="@+id/action_viewinbrowser"
+        android:showAsAction="never"
+        android:icon="@android:drawable/ic_menu_set_as"
+        android:title="@string/action_viewinbrowser"/>
+    <item
+        android:id="@+id/action_about"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:showAsAction="never"
+        android:title="@string/action_about"/>
+
+</menu>

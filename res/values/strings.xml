@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">萌娘百科</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_edit">编辑</string>
+    <string name="action_about">关于</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="search_lable">搜索</string>
+    <string name="search_hint">搜索 萌娘百科</string>
+    <string name="refresh_lable">刷新</string>
+    <string name="share_lable">分享</string>
+    <string name="title_activity_search_query_results">SearchQueryResults</string>
+    <string name="user_agent">MoeGirlView/1.0 (AndroidClient; zh_cnaction_viewinbrowseraction_viewinbrowser)</string>
+    <string name="action_viewinbrowser">在浏览器中打开</string>
+
+</resources>

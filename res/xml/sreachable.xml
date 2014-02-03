@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:hint="@string/search_hint"
+    android:includeInGlobalSearch="false"
+    android:label="@string/search_lable"
+    android:searchMode="queryRewriteFromData"
+    android:searchSuggestAuthority="org.moegirl.moegirlview.SearchSuggestionsProvider"
+    android:searchSuggestIntentAction="android.intent.action.SEARCH"
+    android:searchSuggestThreshold="2" >
+
+</searchable>
