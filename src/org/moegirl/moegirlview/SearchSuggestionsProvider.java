@@ -59,7 +59,7 @@ public class SearchSuggestionsProvider extends SearchRecentSuggestionsProvider {
 
 		try {
 			String urladdr = String
-					.format("http://zh.moegirl.org/api.php?action=query&list=search&srwhat=text&srsearch=%1$s&format=json",
+					.format("http://zh.moegirl.org/api.php?action=query&list=search&srwhat=title&srsearch=%1$s&format=json",
 							URLEncoder.encode(query, "utf-8"));
 
 			HttpClient httpClient1 = new DefaultHttpClient();
