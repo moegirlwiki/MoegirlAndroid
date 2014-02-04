@@ -13,5 +13,6 @@
     <string name="title_activity_search_query_results">SearchQueryResults</string>
     <string name="user_agent">MoeGirlView/1.0 (AndroidClient; zh_cnaction_viewinbrowseraction_viewinbrowser)</string>
     <string name="action_viewinbrowser">在浏览器中打开</string>
+    <string name="title_activity_splash">SplashActivity</string>
 
 </resources>

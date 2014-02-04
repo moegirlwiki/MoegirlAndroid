@@ -22,20 +22,14 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-
-import org.moegirl.moegirlview.sensor.ShakeDetector;
-
-import org.moegirl.moegirlview.sensor.ShakeDetector.OnShakeListener;
+import org.moegirl.moegirlview.ShakeDetector.OnShakeListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -708,7 +702,6 @@ public class MainActivity extends Activity {
 	public int detect() {
 		ConnectivityManager manager = (ConnectivityManager) this
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
-
 		if (manager == null) {
 			return 0;
 		}
@@ -754,7 +747,6 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onShake() { // TODO Auto-generated method stub
-
 			webview1.loadUrl("http://m.moegirl.org/Special:%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2");
 		}
 	}

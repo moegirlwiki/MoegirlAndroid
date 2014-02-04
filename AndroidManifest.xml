@@ -16,7 +16,10 @@
         android:icon="@drawable/logo1"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity android:name="org.moegirl.moegirlview.MainActivity" >
+        <activity
+            android:name="org.moegirl.moegirlview.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
