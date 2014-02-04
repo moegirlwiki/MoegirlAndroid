@@ -9,16 +9,19 @@ import android.view.View;
 import android.widget.ListView;
 
 public class SampleSearchActivity extends ListActivity {
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		handleIntent(getIntent());
 	}
 
+	@Override
 	public void onNewIntent(Intent intent) {
 		setIntent(intent);
 		handleIntent(intent);
 	}
 
+	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// call detail activity for clicked entry
 	}

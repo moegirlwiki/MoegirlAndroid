@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.moegirl.moegirlview"
-    android:versionCode="2"
-    android:versionName="1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.moegirl.moegirlview"
+    android:versionCode="1"
+    android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="15" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,22 +15,37 @@
         android:allowBackup="false"
         android:icon="@drawable/logo1"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
-        <activity android:name="org.moegirl.moegirlview.MainActivity" android:launchMode="singleTop" android:configChanges="keyboardHidden|orientation|screenSize">
+        android:theme="@style/AppTheme" >
+        <activity android:name="org.moegirl.moegirlview.MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/sreachable" />
+        </activity>
+        <activity
+            android:name="org.moegirl.moegirlview.SplashActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER"/>
-                
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
-            </intent-filter>
-            <meta-data android:name="android.app.searchable" android:resource="@xml/sreachable"/>
         </activity>
-        <provider android:authorities="org.moegirl.moegirlview.SearchSuggestionsProvider" android:name="org.moegirl.moegirlview.SearchSuggestionsProvider" android:exported="false"></provider>
+        <activity android:name="org.moegirl.moegirlview.GuideActivity" >
+        </activity>
+
+        <provider
+            android:name="org.moegirl.moegirlview.SearchSuggestionsProvider"
+            android:authorities="org.moegirl.moegirlview.SearchSuggestionsProvider"
+            android:exported="false" >
+        </provider>
     </application>
 
 </manifest>
