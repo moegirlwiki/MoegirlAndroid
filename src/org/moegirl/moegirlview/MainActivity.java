@@ -23,12 +23,19 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import org.moegirl.moegirlview.sensor.ShakeDetector;
+
+import org.moegirl.moegirlview.sensor.ShakeDetector.OnShakeListener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -49,6 +56,8 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private WebView webview1;
+	private ShakeDetector shakeDetector;
+
 	private String webview_html;
 	private String title;
 	private boolean isFromCache = false;
@@ -112,6 +121,12 @@ public class MainActivity extends Activity {
 		} else {
 			loadSaved(savedInstanceState);
 		}
+
+		shakeDetector = new ShakeDetector(this);
+		shakeDetector.registerOnShakeListener(new ShakeListener());
+		System.out.println("start_shake_to_random");
+		shakeDetector.start();
+
 	}
 
 	private void loadSaved(Bundle savedInstanceState) {
@@ -439,7 +454,7 @@ public class MainActivity extends Activity {
 				JSONTokener JsonParser = new JSONTokener(getResult);
 				JSONObject all = (JSONObject) JsonParser.nextValue();
 				JSONObject parse = all.getJSONObject("parse");
-				JSONObject txt = (JSONObject) parse.getJSONObject("text");
+				JSONObject txt = parse.getJSONObject("text");
 
 				String returnTitle = parse.getString("title");
 				revid = parse.getLong("revid");
@@ -726,6 +741,22 @@ public class MainActivity extends Activity {
 			num |= (byteNum[ix] & 0xff);
 		}
 		return num;
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		shakeDetector.stop();
+	}
+
+	private class ShakeListener implements OnShakeListener {
+
+		@Override
+		public void onShake() { // TODO Auto-generated method stub
+
+			webview1.loadUrl("http://m.moegirl.org/Special:%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2");
+		}
 	}
 
 }
