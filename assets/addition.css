@@ -1,0 +1,12 @@
+.thumbimage{max-width: 100%}
+.thumbinner{max-width:100%}
+#toc{background-color: #F9F9F9;border: 1px solid #AAAAAA;padding: 7px;width:200px;}
+
+.mw-editsection{display:none;}.mw-headline{font-weight:bold;}
+.nomobile{display:none;} .heimu{background-color: #000;}
+
+.navbox tr,.navbox td{
+display: inline;
+}
+
+@media screen and (max-width: 400px) {p{clear: both;}}

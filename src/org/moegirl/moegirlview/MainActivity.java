@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
 
 	private ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-	// private final String homePage = "¹éÕ¬²¿»î¶¯¼ÇÂ¼";
+	// private final String homePage = "å½’å®…éƒ¨æ´»åŠ¨è®°å½•";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class MainActivity extends Activity {
 		// StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 		// .detectAll().build());
 
-		setTitle("ÃÈÄï°Ù¿Æ");
+		setTitle("èŒå¨˜ç™¾ç§‘");
 		setContentView(R.layout.activity_main);
 
 		getOverflowMenu();
@@ -129,7 +129,7 @@ public class MainActivity extends Activity {
 		revid = savedInstanceState.getLong("revid");
 
 		if (title.toLowerCase(Locale.getDefault()).equals("mainpage")) {
-			setTitle("ÃÈÄï°Ù¿Æ");
+			setTitle("èŒå¨˜ç™¾ç§‘");
 		} else {
 			setTitle(title);
 		}
@@ -168,13 +168,13 @@ public class MainActivity extends Activity {
 		case R.id.action_about:
 			// openSettings();
 			new AlertDialog.Builder(this)
-					.setTitle("¹ØÓÚ")
+					.setTitle("å…³äº")
 					.setMessage(
-							"ÃÈÄï°Ù¿ÆAndroid¿Í»§¶Ë²âÊÔ°æ\n\n"
-									+ "By£ºËÀÕ¬Ğ¡h\n"
+							"èŒå¨˜ç™¾ç§‘Androidå®¢æˆ·ç«¯æµ‹è¯•ç‰ˆ\n\n"
+									+ "Byï¼šæ­»å®…å°h\n"
 									+ "Dedicated to cwl and this beautiful cruel world\n\n"
 									+ "wifi: " + !forceCache)
-					.setPositiveButton("È·¶¨", null).show();
+					.setPositiveButton("ç¡®å®š", null).show();
 			return true;
 		case R.id.action_refresh:
 			GetPageTask task = new GetPageTask(this);
@@ -197,13 +197,13 @@ public class MainActivity extends Activity {
 			try {
 				Intent intent = new Intent(Intent.ACTION_SEND);
 				intent.setType("text/plain");
-				intent.putExtra(Intent.EXTRA_SUBJECT, "ÃÈÄï°Ù¿Æ - " + title);
+				intent.putExtra(Intent.EXTRA_SUBJECT, "èŒå¨˜ç™¾ç§‘ - " + title);
 				intent.putExtra(
 						Intent.EXTRA_TEXT,
 						title + " http://zh.moegirl.org/"
-								+ URLEncoder.encode(title, "utf-8") + " #ÃÈÄï°Ù¿Æ#");
+								+ URLEncoder.encode(title, "utf-8") + " #èŒå¨˜ç™¾ç§‘#");
 				startActivity(Intent
-						.createChooser(intent, "·ÖÏí - " + getTitle()));
+						.createChooser(intent, "åˆ†äº« - " + getTitle()));
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -302,7 +302,7 @@ public class MainActivity extends Activity {
 		public GetPageTask(Context context) {
 			pdialog = new ProgressDialog(context);
 			pdialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			pdialog.setMessage("ÔØÈëÖĞ");
+			pdialog.setMessage("è½½å…¥ä¸­");
 			pdialog.setIndeterminate(true);
 			pdialog.setCancelable(false);
 			pdialog.show();
@@ -366,7 +366,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected Integer doInBackground(String... arg0) {
-			// Log.i("MoeGirlDebug", "title£º" + title);
+			// Log.i("MoeGirlDebug", "titleï¼š" + title);
 
 			title = arg0[0];
 			String ForceUpdate = arg0[1];
@@ -383,26 +383,23 @@ public class MainActivity extends Activity {
 					+ "<head>\n"
 					+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n"
 					+ "<meta name=\"robots\" content=\"noindex, nofollow\" />\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0, user-scalable=no\" />\n"
-					+ "<title>ÃÈÄï°Ù¿Æ ÍòÎï½Ô¿ÉÃÈµÄ°Ù¿ÆÈ«Êé - zh.moegirl.org</title>\n"
+					+ "<title>èŒå¨˜ç™¾ç§‘ ä¸‡ç‰©çš†å¯èŒçš„ç™¾ç§‘å…¨ä¹¦ - zh.moegirl.org</title>\n"
 					+ "<link rel=\"apple-touch-icon\" href=\"/apple-touch-icon.png\" />\n"
-					+ "<link rel=\"stylesheet\" href=\"/skins/wptouch/css/main.css\" type=\"text/css\" media=\"screen\" />\n"
+					// +
+					// "<link rel=\"stylesheet\" href=\"/skins/wptouch/css/main.css\" type=\"text/css\" media=\"screen\" />\n"
+					+ "<link rel=\"stylesheet\" href=\"file:///android_asset/main.css\" type=\"text/css\" media=\"screen\" />\n"
+					+ "<link rel=\"stylesheet\" href=\"file:///android_asset/addition.css\" type=\"text/css\" media=\"screen\" />\n"
 					+ "<link href=\"//zh.moegirl.org/load.php?debug=false&lang=zh&modules=site&only=styles&skin=vector&*\" rel=\"stylesheet\">\n"
 					+ "<script src=\"/load.php?debug=false&lang=zh&modules=jquery%2Cmediawiki&only=scripts&skin=vector&version=20131206T221358Z\">\n"
 					+ "<script type=\"text/javascript\" src=\"/skins/wptouch/javascript/core.js?ver=1.9\"></script>\n"
 					+ "</head>"
 					+ "<body><div class=\"content\"><div class=\"post\"><div class=\"mainentry\"><div id=\"mw-content-text\" class=\"mw-content-ltr\" lang=\"zh-CN\" dir=\"ltr\">";
 
-			String addonStyle = "<style>.thumbimage{max-width: 100%} "
-					+ ".thumbinner{max-width:100%} tr, td{display: block;}"
-					+ "#toc{background-color: #F9F9F9;border: 1px solid #AAAAAA;padding: 7px;width:200px;}"
-					+ "@media screen and (max-width: 400px) {p{clear: both;}}"
-					+ ".mw-editsection{display:none;}.mw-headline{font-weight:bold;}"
-					+ ".nomobile{display:none;} .heimu{background-color: #000;}"
-					+ "</style>";
+			String addonStyle = "";
 
 			String urladdr = "";
 			try {
-				// redirectsÖØ¶¨Ïò
+				// redirectsé‡å®šå‘
 				urladdr = String
 						.format("http://zh.moegirl.org/api.php?action=parse&format=json&redirects&page=%1$s",
 								URLEncoder.encode(title, "utf-8"));
@@ -414,9 +411,9 @@ public class MainActivity extends Activity {
 			}
 
 			String footer = "</div>"
-					+ "<hr/><p>±¾Õ¾È«²¿ÄÚÈİ½ûÖ¹ÉÌÒµÊ¹ÓÃ<br/>ÎÄ±¾ÄÚÈİ³ıÁíÓĞÉùÃ÷Íâ,¾ùÔÚ"
-					+ "<b>ÖªÊ¶¹²Ïí(Creative Commons) ÊğÃû-·ÇÉÌÒµĞÔÊ¹ÓÃ-ÏàÍ¬·½Ê½¹²Ïí 3.0 Ğ­Òé</b>"
-					+ "ÏÂÌá¹©,¸½¼ÓÌõ¿îÒà¿ÉÄÜÓ¦ÓÃ<br/>ÆäËûÀàĞÍ×÷Æ·°æÈ¨¹éÊôÔ­×÷Õß£¬ÈçÓĞÊÚÈ¨×ñÕÕÊÚÈ¨Ğ­ÒéÊ¹ÓÃ</p>"
+					+ "<hr/><p>æœ¬ç«™å…¨éƒ¨å†…å®¹ç¦æ­¢å•†ä¸šä½¿ç”¨<br/>æ–‡æœ¬å†…å®¹é™¤å¦æœ‰å£°æ˜å¤–,å‡åœ¨"
+					+ "<b>çŸ¥è¯†å…±äº«(Creative Commons) ç½²å-éå•†ä¸šæ€§ä½¿ç”¨-ç›¸åŒæ–¹å¼å…±äº« 3.0 åè®®</b>"
+					+ "ä¸‹æä¾›,é™„åŠ æ¡æ¬¾äº¦å¯èƒ½åº”ç”¨<br/>å…¶ä»–ç±»å‹ä½œå“ç‰ˆæƒå½’å±åŸä½œè€…ï¼Œå¦‚æœ‰æˆæƒéµç…§æˆæƒåè®®ä½¿ç”¨</p>"
 					+ "</div></div></div>"
 					+ "<script>/*<![CDATA[*/window.jQuery && jQuery.ready();/*]]>*/</script>"
 					+ "<script>if(window.mw){\nmw.loader.state({\"site\":\"loading\",\"user\":\"ready\",\"user.groups\":\"ready\"});\n}</script>\n"
@@ -512,14 +509,14 @@ public class MainActivity extends Activity {
 		protected void onPostExecute(Integer result) {
 			boolean isErr = false;
 			if (result == -1) {
-				webview1.loadDataWithBaseURL(null, "Ã»ÓĞÕâ¸ö´ÊÌõ", "text/html",
+				webview1.loadDataWithBaseURL(null, "æ²¡æœ‰è¿™ä¸ªè¯æ¡", "text/html",
 						"utf-8", null);
-				setTitle("ÃÈÄï°Ù¿Æ");
+				setTitle("èŒå¨˜ç™¾ç§‘");
 				isErr = true;
 			} else if (result == null || result == -1) {
-				webview1.loadDataWithBaseURL(null, "·¢Éú´íÎó!", "text/html",
+				webview1.loadDataWithBaseURL(null, "å‘ç”Ÿé”™è¯¯!", "text/html",
 						"utf-8", null);
-				setTitle("ÃÈÄï°Ù¿Æ");
+				setTitle("èŒå¨˜ç™¾ç§‘");
 				isErr = true;
 			} else {
 				if (result == 1) {
@@ -532,7 +529,7 @@ public class MainActivity extends Activity {
 						this.result, "text/html", "utf-8", null);
 
 				if (title.toLowerCase(Locale.getDefault()).equals("mainpage")) {
-					setTitle("ÃÈÄï°Ù¿Æ");
+					setTitle("èŒå¨˜ç™¾ç§‘");
 				} else {
 					setTitle(title);
 				}
@@ -592,7 +589,7 @@ public class MainActivity extends Activity {
 					intent.setData(content_url);
 					startActivity(intent);
 					// view.loadUrl(url.replace("redlink=1", ""));
-					// setTitle("ÃÈÄï°Ù¿Æ");
+					// setTitle("èŒå¨˜ç™¾ç§‘");
 				}
 				return true;
 			} else {
@@ -684,7 +681,7 @@ public class MainActivity extends Activity {
 		protected void onPostExecute(Boolean result) {
 			// Log.i("MoeGirl", result.toString());
 			if (result && arg_title.equals(title)) {
-				Toast.makeText(getApplicationContext(), "´ÊÌõÒÑ¾­¸üĞÂ£¬µã»÷ÓÒÉÏ½ÇË¢ĞÂ²é¿´",
+				Toast.makeText(getApplicationContext(), "è¯æ¡å·²ç»æ›´æ–°ï¼Œç‚¹å‡»å³ä¸Šè§’åˆ·æ–°æŸ¥çœ‹",
 						Toast.LENGTH_SHORT).show();
 			}
 		}

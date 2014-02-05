@@ -9,7 +9,14 @@ http://zh.moegirl.org/
 萌百Android应用
 under constructing^^^^^^^^
 
-
-
 h_version intital by 死宅小h
 update by salamanderrex @ 2014.2.4
+
+
+## **Todo** ##
+- Guide导引
+- 图片和分类的显示
+- 搜索历史
+- 浏览历史
+- 页面保存
+- 新的关于页面
