@@ -434,15 +434,7 @@ public class MainActivity extends Activity {
 			try {
 				HttpResponse response = httpClient1.execute(httpRequest1);
 				HttpEntity entity = response.getEntity();
-				// BufferedReader reader = new BufferedReader(
-				// new InputStreamReader(entity.getContent(), "utf-8"));
-				//
-				// StringBuffer sb = new StringBuffer();
-				// String line = null;
-				// while ((line = reader.readLine()) != null) {
-				// sb.append(line + '\n');
-				// }
-				// reader.close();
+
 				String getResult = EntityUtils.toString(entity);
 
 				JSONTokener JsonParser = new JSONTokener(getResult);
