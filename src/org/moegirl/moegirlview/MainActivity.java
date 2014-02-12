@@ -37,15 +37,19 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build.VERSION;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -167,14 +171,25 @@ public class MainActivity extends Activity {
 			return true;
 		case R.id.action_about:
 			// openSettings();
-			new AlertDialog.Builder(this)
-					.setTitle("关于")
-					.setMessage(
-							"萌娘百科Android客户端测试版\n\n"
-									+ "By：死宅小h\n"
-									+ "Dedicated to cwl and this beautiful cruel world\n\n"
-									+ "wifi: " + !forceCache)
+			// new AlertDialog.Builder(this)
+			// .setTitle("关于")
+			// .setMessage(
+			// "萌娘百科Android客户端测试版\n\n"
+			// + "By：死宅小h\n"
+			// + "Dedicated to cwl and this beautiful cruel world\n\n"
+			// + "wifi: " + !forceCache)
+			// .setPositiveButton("确定", null).show();
+			LayoutInflater inflater = getLayoutInflater();
+			View aboutLayout = inflater.inflate(R.layout.about,
+					(ViewGroup) findViewById(R.layout.about));
+			TextView a1 = (TextView) aboutLayout.findViewById(R.id.textView1);
+			a1.setMovementMethod(LinkMovementMethod.getInstance());
+			// a1.setText(Html.fromHtml(getResources().getString(
+			// R.string.about_text)));
+
+			new AlertDialog.Builder(this).setTitle("关于").setView(aboutLayout)
 					.setPositiveButton("确定", null).show();
+
 			return true;
 		case R.id.action_refresh:
 			GetPageTask task = new GetPageTask(this);

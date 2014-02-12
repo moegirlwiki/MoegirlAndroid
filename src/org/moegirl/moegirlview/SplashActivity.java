@@ -17,14 +17,14 @@ public class SplashActivity extends Activity {
 		setContentView(R.layout.activity_splash);
 
 		new Handler().postDelayed(new Runnable() {
-			// ÎªÁË¼õÉÙ´úÂëÊ¹ÓÃÄäÃûHandler´´½¨Ò»¸öÑÓÊ±µÄµ÷ÓÃ
+			// ÎªÃË¼ÃµÃ‰Ù´ÃºÃ‚Ã«Ê¹Ã“ÃƒÃ„Ã¤ÃƒÃ»HandlerÂ´Â´Â½Â¨Ò»Â¸Ã¶Ã‘Ã“Ê±ÂµÄµÃ·Ã“Ãƒ
 			public void run() {
 				Intent i = new Intent(SplashActivity.this, MainActivity.class);
-				// Í¨¹ıIntent´ò¿ª×îÖÕÕæÕıµÄÖ÷½çÃæMainÕâ¸öActivity
-				SplashActivity.this.startActivity(i); // Æô¶¯Main½çÃæ
-				SplashActivity.this.finish(); // ¹Ø±Õ×Ô¼ºÕâ¸ö¿ª³¡ÆÁ
+				// Í¨Â¹Ã½IntentÂ´Ã²Â¿ÂªÃ—Ã®Ã–Ã•Ã•Ã¦Ã•Ã½ÂµÃ„Ã–Ã·Â½Ã§ÃƒÃ¦MainÃ•Ã¢Â¸Ã¶Activity
+				SplashActivity.this.startActivity(i); // Ã†Ã´Â¶Â¯MainÂ½Ã§ÃƒÃ¦
+				SplashActivity.this.finish(); // Â¹Ø±Ã•Ã—Ô¼ÂºÃ•Ã¢Â¸Ã¶Â¿ÂªÂ³Â¡Ã†Ã
 			}
-		}, 800); // 5Ãë£¬¹»ÓÃÁË°É
+		}, 800); // 5Ãƒë£¬Â¹Â»Ã“ÃƒÃË°Ã‰
 	}
 
 	class SplashHandler implements Runnable {
