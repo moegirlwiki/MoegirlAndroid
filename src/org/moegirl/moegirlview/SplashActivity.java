@@ -17,14 +17,12 @@ public class SplashActivity extends Activity {
 		setContentView(R.layout.activity_splash);
 
 		new Handler().postDelayed(new Runnable() {
-			// ΪÁ˼õÉٴúÂëʹÓÃÄäÃûHandler´´½¨һ¸öÑÓʱµĵ÷ÓÃ
 			public void run() {
 				Intent i = new Intent(SplashActivity.this, MainActivity.class);
-				// ͨ¹ýIntent´ò¿ª×îÖÕÕæÕýµÄÖ÷½çÃæMainÕâ¸öActivity
-				SplashActivity.this.startActivity(i); // Æô¶¯Main½çÃæ
-				SplashActivity.this.finish(); // ¹رÕ×ԼºÕâ¸ö¿ª³¡ÆÁ
+				SplashActivity.this.startActivity(i);
+				SplashActivity.this.finish();
 			}
-		}, 800); // 5Ã룬¹»ÓÃÁ˰É
+		}, 800);
 	}
 
 	class SplashHandler implements Runnable {

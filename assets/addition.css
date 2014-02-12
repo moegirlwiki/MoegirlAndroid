@@ -8,5 +8,15 @@
 .navbox tr,.navbox td{
 display: inline;
 }
-
-@media screen and (max-width: 400px) {p{clear: both;}}
+.mainpage-a,.mainpage-b,.mainpage-c,.mainpage-d{
+overflow: hidden;
+}
+.mainpage-content td{
+display:block;
+float:left;
+width:200px;
+margin: 0 auto;
+}
+@media screen and (max-width: 400px) {
+p{clear: both;}
+}
