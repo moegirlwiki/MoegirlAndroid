@@ -11,7 +11,7 @@
     <string name="refresh_lable">刷新</string>
     <string name="share_lable">分享</string>
     <string name="title_activity_search_query_results">SearchQueryResults</string>
-    <string name="user_agent">MoeGirlView/1.0 (AndroidClient; zh_cnaction_viewinbrowseraction_viewinbrowser)</string>
+    <string name="user_agent">MoeGirlView/1.0 (Client; zh_cnaction_viewinbrowseraction_viewinbrowser)</string>
     <string name="action_viewinbrowser">在浏览器中打开</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="about_text">
@@ -19,8 +19,9 @@
 By：死宅小h\n<font size="12">Dedicated to cwl and this beautiful cruel world</font>
 \n\n
 萌娘百科：<a href="http://zh.moegirl.org">zh.moegirl.org</a> \n\n<b>萌娘百科的更新姬们：</b>\n
-大姐姐新浪姬：<font size="14"><a href="http://weibo.com/moegirlwiki">新浪微博</a></font>\n
+大姐姐渣浪姬：<font size="14"><a href="http://weibo.com/moegirlwiki">新浪微博</a></font>\n
 人人更新姬：<font size="14"><a href="http://page.renren.com/601622602">公共主页</a></font> \n
-抖M微信姬：微信号 moegirlpedia \n</string>
+抖M微信姬：微信号 moegirlpedia \n
+疼迅姬：<font size="14"><a href="http://t.qq.com/moegirlwiki">腾讯微博</a></font> \n</string>
 
 </resources>
