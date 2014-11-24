@@ -53,7 +53,7 @@ public class SearchSuggestionsProvider extends SearchRecentSuggestionsProvider {
 		MatrixCursor cursor = new MatrixCursor(COLUMNS);
 
 		if (query.equals("search_suggest_query")) {
-			cursor.addRow(createRow(0, "ËÑË÷ÖĞ...", "", ""));
+			cursor.addRow(createRow(0, "æœç´¢ä¸­...", "", ""));
 			return cursor;
 		}
 
@@ -92,7 +92,7 @@ public class SearchSuggestionsProvider extends SearchRecentSuggestionsProvider {
 					pattern = Pattern.compile("<[^>]+>");
 					Matcher m = pattern.matcher(snippet);
 					snippet = m.replaceAll("");
-					snippet = snippet.replace("#REDIRECT", "Ìø×ªÖÁ");
+					snippet = snippet.replace("#REDIRECT", "è·³è½¬è‡³");
 				} catch (Exception e) {
 					Log.e(TAG, "take pattern fail " + query, e);
 				}
@@ -108,7 +108,7 @@ public class SearchSuggestionsProvider extends SearchRecentSuggestionsProvider {
 			}
 			if (searchList.length() == 0) {
 				Log.i("MoeGirlSearchSuggest", "no suggest query: " + query);
-				cursor.addRow(createRow(0, "Ã»ÓĞÕÒµ½Ïà¹ØÄÚÈİ", "", ""));
+				cursor.addRow(createRow(0, "æ²¡æœ‰æ‰¾åˆ°ç›¸å…³å†…å®¹", "", ""));
 			}
 
 		} catch (Exception e) {

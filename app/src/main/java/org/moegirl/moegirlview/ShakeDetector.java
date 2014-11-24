@@ -10,40 +10,40 @@ import android.hardware.SensorManager;
 import android.util.FloatMath;
 
 /**
- * ÓÃÓÚ¼ì²âÊÖ»úÒ¡»Î
+ * ç”¨äºæ£€æµ‹æ‰‹æœºæ‘‡æ™ƒ
  * 
- * @author Ö£ÖÇÈÊ
+ * @author éƒ‘æ™ºä»
  * @see <a href="http://blog.csdn.net/zhengzhiren">Blog</a>
  */
 public class ShakeDetector implements SensorEventListener {
 
 	/**
-	 * ¼ì²âµÄÊ±¼ä¼ä¸ô
+	 * æ£€æµ‹çš„æ—¶é—´é—´éš”
 	 */
 	private static final int UPDATE_INTERVAL = 100;
 
 	/**
-	 * µ±¼ì²âµ½Ò»´ÎÒ¡»Î·¢Éú£¬ÓëÏÂ´Î¿ªÊ¼¼ì²âµÄ¼ä¸ôÊ±¼ä£¨ºÁÃë£©
+	 * å½“æ£€æµ‹åˆ°ä¸€æ¬¡æ‘‡æ™ƒå‘ç”Ÿï¼Œä¸ä¸‹æ¬¡å¼€å§‹æ£€æµ‹çš„é—´éš”æ—¶é—´ï¼ˆæ¯«ç§’ï¼‰
 	 */
 	private static final long SHAKE_INTERVAL = 500;
 
 	/**
-	 * ÊÇ·ñÊ×´Î¼ì²â¡£Èç¹ûÊÇÊ×´Î¼ì²â£¬Òª¶ÔmLastX, mLastY, mLastZµÈ½øĞĞ³õÊ¼»¯
+	 * æ˜¯å¦é¦–æ¬¡æ£€æµ‹ã€‚å¦‚æœæ˜¯é¦–æ¬¡æ£€æµ‹ï¼Œè¦å¯¹mLastX, mLastY, mLastZç­‰è¿›è¡Œåˆå§‹åŒ–
 	 */
 	private boolean mFirstUpdate;
 
 	/**
-	 * ÉÏÒ»´Î¼ì²âµÄÊ±¼ä
+	 * ä¸Šä¸€æ¬¡æ£€æµ‹çš„æ—¶é—´
 	 */
 	private long mLastUpdateTime;
 
 	/**
-	 * ÉÏÒ»´Î·¢ÉúÒ¡»ÎµÄÊ±¼ä
+	 * ä¸Šä¸€æ¬¡å‘ç”Ÿæ‘‡æ™ƒçš„æ—¶é—´
 	 */
 	private long mLastShakeTime = 0;
 
 	/**
-	 * ÉÏÒ»´Î¼ì²âÊ±£¬¼ÓËÙ¶ÈÔÚx¡¢y¡¢z·½ÏòÉÏµÄ·ÖÁ¿£¬ÓÃÓÚºÍµ±Ç°¼ÓËÙ¶È±È½ÏÇó²î¡£
+	 * ä¸Šä¸€æ¬¡æ£€æµ‹æ—¶ï¼ŒåŠ é€Ÿåº¦åœ¨xã€yã€zæ–¹å‘ä¸Šçš„åˆ†é‡ï¼Œç”¨äºå’Œå½“å‰åŠ é€Ÿåº¦æ¯”è¾ƒæ±‚å·®ã€‚
 	 */
 	private float mLastX, mLastY, mLastZ;
 
@@ -51,12 +51,12 @@ public class ShakeDetector implements SensorEventListener {
 	private ArrayList<OnShakeListener> mListeners;
 
 	/**
-	 * Ò¡»Î¼ì²âãĞÖµ£¬¾ö¶¨ÁË¶ÔÒ¡»ÎµÄÃô¸Ğ³Ì¶È£¬Ô½Ğ¡Ô½Ãô¸Ğ¡£
+	 * æ‘‡æ™ƒæ£€æµ‹é˜ˆå€¼ï¼Œå†³å®šäº†å¯¹æ‘‡æ™ƒçš„æ•æ„Ÿç¨‹åº¦ï¼Œè¶Šå°è¶Šæ•æ„Ÿã€‚
 	 */
 	private int mShakeThreshold = 3000;
 
 	/**
-	 * Ò¡»Î¼ì²âãĞÖµ£¬¾ö¶¨ÁË¶ÔÒ¡»ÎµÄÃô¸Ğ³Ì¶È£¬Ô½Ğ¡Ô½Ãô¸Ğ¡£
+	 * æ‘‡æ™ƒæ£€æµ‹é˜ˆå€¼ï¼Œå†³å®šäº†å¯¹æ‘‡æ™ƒçš„æ•æ„Ÿç¨‹åº¦ï¼Œè¶Šå°è¶Šæ•æ„Ÿã€‚
 	 * 
 	 * @return
 	 */
@@ -65,7 +65,7 @@ public class ShakeDetector implements SensorEventListener {
 	}
 
 	/**
-	 * Ò¡»Î¼ì²âãĞÖµ£¬¾ö¶¨ÁË¶ÔÒ¡»ÎµÄÃô¸Ğ³Ì¶È£¬Ô½Ğ¡Ô½Ãô¸Ğ¡£
+	 * æ‘‡æ™ƒæ£€æµ‹é˜ˆå€¼ï¼Œå†³å®šäº†å¯¹æ‘‡æ™ƒçš„æ•æ„Ÿç¨‹åº¦ï¼Œè¶Šå°è¶Šæ•æ„Ÿã€‚
 	 */
 	public void setShakeThreshold(int threshold) {
 		mShakeThreshold = threshold;
@@ -78,17 +78,17 @@ public class ShakeDetector implements SensorEventListener {
 	}
 
 	/**
-	 * µ±Ò¡»ÎÊÂ¼ş·¢ÉúÊ±£¬½ÓÊÕÍ¨Öª
+	 * å½“æ‘‡æ™ƒäº‹ä»¶å‘ç”Ÿæ—¶ï¼Œæ¥æ”¶é€šçŸ¥
 	 */
 	public interface OnShakeListener {
 		/**
-		 * µ±ÊÖ»úÒ¡»ÎÊ±±»µ÷ÓÃ
+		 * å½“æ‰‹æœºæ‘‡æ™ƒæ—¶è¢«è°ƒç”¨
 		 */
 		void onShake();
 	}
 
 	/**
-	 * ×¢²áOnShakeListener£¬µ±Ò¡»ÎÊ±½ÓÊÕÍ¨Öª
+	 * æ³¨å†ŒOnShakeListenerï¼Œå½“æ‘‡æ™ƒæ—¶æ¥æ”¶é€šçŸ¥
 	 * 
 	 * @param listener
 	 */
@@ -98,7 +98,7 @@ public class ShakeDetector implements SensorEventListener {
 	}
 
 	/**
-	 * ÒÆ³ıÒÑ¾­×¢²áµÄOnShakeListener
+	 * ç§»é™¤å·²ç»æ³¨å†Œçš„OnShakeListener
 	 * 
 	 * @param listener
 	 */
@@ -107,7 +107,7 @@ public class ShakeDetector implements SensorEventListener {
 	}
 
 	/**
-	 * Æô¶¯Ò¡»Î¼ì²â
+	 * å¯åŠ¨æ‘‡æ™ƒæ£€æµ‹
 	 */
 	public void start() throws UnsupportedOperationException {
 		Sensor sensor = mSensorManager
@@ -124,7 +124,7 @@ public class ShakeDetector implements SensorEventListener {
 	}
 
 	/**
-	 * Í£Ö¹Ò¡»Î¼ì²â
+	 * åœæ­¢æ‘‡æ™ƒæ£€æµ‹
 	 */
 	public void stop() {
 		if (mSensorManager != null)
@@ -144,7 +144,7 @@ public class ShakeDetector implements SensorEventListener {
 		float z = event.values[2];
 		long diffTime = currentTime - mLastUpdateTime;
 
-		// Ê×´Î¼ì²â£¬½øĞĞ³õÊ¼»¯
+		// é¦–æ¬¡æ£€æµ‹ï¼Œè¿›è¡Œåˆå§‹åŒ–
 		if (mFirstUpdate) {
 			mLastX = x;
 			mLastY = y;
@@ -154,12 +154,12 @@ public class ShakeDetector implements SensorEventListener {
 			return;
 		}
 
-		// Á½´Î¼ì²âµÄ¼ä¸ô
+		// ä¸¤æ¬¡æ£€æµ‹çš„é—´éš”
 		if (diffTime < UPDATE_INTERVAL) {
 			return;
 		}
 
-		// Á½´ÎÒ¡»ÎµÄ¼ä¸ô
+		// ä¸¤æ¬¡æ‘‡æ™ƒçš„é—´éš”
 		if (currentTime - mLastShakeTime < SHAKE_INTERVAL) {
 			mLastX = x;
 			mLastY = y;
@@ -177,12 +177,12 @@ public class ShakeDetector implements SensorEventListener {
 		mLastZ = z;
 		mLastUpdateTime = currentTime;
 
-		// ¼ÓËÙ¶È²îÖµ
+		// åŠ é€Ÿåº¦å·®å€¼
 		float delta = FloatMath.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ
 				* deltaZ)
 				/ diffTime * 10000;
 
-		// µ±²îÖµ´óÓÚÖ¸¶¨µÄãĞÖµ£¬ÈÏÎªÕâÊÇÒ»¸öÒ¡»Î
+		// å½“å·®å€¼å¤§äºæŒ‡å®šçš„é˜ˆå€¼ï¼Œè®¤ä¸ºè¿™æ˜¯ä¸€ä¸ªæ‘‡æ™ƒ
 		if (delta > mShakeThreshold) {
 			mLastShakeTime = currentTime;
 			notifyListeners();
@@ -190,7 +190,7 @@ public class ShakeDetector implements SensorEventListener {
 	}
 
 	/**
-	 * µ±Ò¡»ÎÊÂ¼ş·¢ÉúÊ±£¬Í¨ÖªËùÓĞµÄlistener
+	 * å½“æ‘‡æ™ƒäº‹ä»¶å‘ç”Ÿæ—¶ï¼Œé€šçŸ¥æ‰€æœ‰çš„listener
 	 */
 	private void notifyListeners() {
 		for (OnShakeListener listener : mListeners) {
