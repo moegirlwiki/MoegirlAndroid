@@ -1,0 +1,38 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item
+		android:id="@+id/share"
+		android:orderInCategory="100"
+		android:showAsAction="never"
+		android:title="分享"/>
+
+	<item
+		android:id="@+id/refresh"
+		android:orderInCategory="100"
+		android:showAsAction="never"
+		android:title="刷新"/>
+
+	<item
+		android:id="@+id/edit"
+		android:orderInCategory="100"
+		android:showAsAction="never"
+		android:title="编辑"/>
+	
+	<item
+		android:id="@+id/addbookmark"
+		android:orderInCategory="100"
+		android:showAsAction="never"
+		android:title="加入书签"/>
+	
+	<item
+		android:id="@+id/openinbrowser"
+		android:orderInCategory="100"
+		android:showAsAction="never"
+		android:title="在浏览器中打开"/>
+	
+	<item
+		android:id="@+id/about"
+		android:orderInCategory="100"
+		android:showAsAction="never"
+		android:title="关于"/>
+</menu>

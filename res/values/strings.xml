@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">萌娘百科</string>
+	<string name="bookmark">书签</string>
+	<string name="history">历史</string>
+	<string name="delete">删除</string>
+	<string name="long_click_bookmark_title">书签操作</string>
+    <string name="long_click_history_title">历史操作</string>
+	
+	<string name="about_text">
+        <font size="20"><b>萌娘百科Android客户端</b></font>\n\n
+		By：%73 QQ:592823270\n
+		\n
+		萌娘百科：<a href="http://zh.moegirl.org">zh.moegirl.org</a> \n\n
+		<b>萌娘百科的更新姬们：</b>\n
+		大姐姐渣浪姬：<font size="14"><a href="http://weibo.com/moegirlwiki">新浪微博</a></font>\n
+		人人更新姬：<font size="14"><a href="http://page.renren.com/601622602">公共主页</a></font> \n
+		抖M微信姬：微信号 moegirlpedia \n
+		疼迅姬：<font size="14"><a href="http://t.qq.com/moegirlwiki">腾讯微博</a></font> \n
+	</string>
+</resources>

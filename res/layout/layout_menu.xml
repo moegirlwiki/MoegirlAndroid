@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="240dip"
+	android:layout_height="fill_parent"
+	android:layout_gravity="start"
+	android:background="@drawable/bitmap_book_read_chapterlist_repeat"
+	android:orientation="vertical">
+
+	<ScrollView
+		android:layout_height="fill_parent"
+		android:layout_width="fill_parent"
+		android:scrollbars="none">
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<TextView
+				android:layout_width="240dip"
+				android:layout_height="28.0dip"
+				android:background="#ff313131"
+				android:gravity="center_vertical"
+				android:paddingLeft="15.0dip"
+				android:text="常用"
+				android:textColor="#ff959595"
+				android:textSize="14.0sp"/>
+
+			<TextView
+				android:layout_width="240dip"
+				android:layout_height="50.0dip"
+				android:background="@drawable/selector_category_item"
+				android:clickable="true"
+				android:gravity="center_vertical"
+				android:paddingLeft="15.0dip"
+				android:paddingRight="10.0dip"
+				android:text="登录"
+				android:textColor="#ff959595"
+				android:textSize="16.0sp"
+				android:id="@+id/menuLogin"/>
+
+			<View
+				android:layout_width="240dip"
+				android:layout_height="2.0dip"
+				android:background="@drawable/ic_shelf_category_divider"/>
+			
+			<TextView
+				android:layout_width="240dip"
+				android:layout_height="50.0dip"
+				android:background="@drawable/selector_category_item"
+				android:clickable="true"
+				android:gravity="center_vertical"
+				android:paddingLeft="15.0dip"
+				android:paddingRight="10.0dip"
+				android:text="随机页面"
+				android:textColor="#ff959595"
+				android:textSize="16.0sp"
+				android:id="@+id/menuRandom"/>
+
+			<View
+				android:layout_width="240dip"
+				android:layout_height="2.0dip"
+				android:background="@drawable/ic_shelf_category_divider"/>
+
+			<TextView
+				android:layout_width="240dip"
+				android:layout_height="50.0dip"
+				android:background="@drawable/selector_category_item"
+				android:clickable="true"
+				android:gravity="center_vertical"
+				android:paddingLeft="15.0dip"
+				android:paddingRight="10.0dip"
+				android:text="@string/bookmark"
+				android:textColor="#ff959595"
+				android:textSize="16.0sp"
+				android:id="@+id/menuBookmark"/>
+
+			<View
+				android:layout_width="240dip"
+				android:layout_height="2.0dip"
+				android:background="@drawable/ic_shelf_category_divider"/>
+
+			<TextView
+				android:layout_width="240dip"
+				android:layout_height="50.0dip"
+				android:background="@drawable/selector_category_item"
+				android:clickable="true"
+				android:gravity="center_vertical"
+				android:paddingLeft="15.0dip"
+				android:paddingRight="10.0dip"
+				android:text="@string/history"
+				android:textColor="#ff959595"
+				android:textSize="16.0sp"
+				android:id="@+id/menuHistory"/>
+
+			<View
+				android:layout_width="240dip"
+				android:layout_height="2.0dip"
+				android:background="@drawable/ic_shelf_category_divider"/>
+
+			<TextView
+				android:layout_width="240dip"
+				android:layout_height="50.0dip"
+				android:background="@drawable/selector_category_item"
+				android:clickable="true"
+				android:gravity="center_vertical"
+				android:paddingLeft="15.0dip"
+				android:paddingRight="10.0dip"
+				android:text="退出"
+				android:textColor="#ff959595"
+				android:textSize="16.0sp"
+				android:id="@+id/menuQuit"/>
+
+			<View
+				android:layout_width="240dip"
+				android:layout_height="2.0dip"
+				android:background="@drawable/ic_shelf_category_divider"/>
+
+		</LinearLayout>
+
+	</ScrollView>
+
+</LinearLayout>
+
