@@ -1,1 +1,55 @@
-<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"    android:layout_width="fill_parent"    android:layout_height="fill_parent"    android:orientation="vertical" >    <RelativeLayout        android:layout_width="fill_parent"        android:layout_height="45dip"        android:background="@drawable/bg_title_bar">        <TextView            android:layout_width="wrap_content"            android:layout_height="wrap_content"            android:layout_centerInParent="true"            android:layout_marginTop="8dip"            android:text="@string/history"            android:textColor="@color/white"            android:textSize="18sp" />    </RelativeLayout>    <ListView        android:id="@+id/history_list"        android:layout_width="fill_parent"        android:layout_height="fill_parent"        android:persistentDrawingCache="animation|scrolling" /></LinearLayout>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical">
+
+	<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="45dip"
+		android:background="@drawable/bg_title_bar">
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:layout_marginTop="8dip"
+			android:text="@string/history"
+			android:textColor="@color/white"
+			android:textSize="18sp"/>
+
+		<LinearLayout
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:orientation="horizontal"
+			android:gravity="center_vertical">
+
+			<LinearLayout
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:orientation="horizontal"
+				android:layout_weight="1.0"/>
+
+			<Button
+				android:layout_height="wrap_content"
+				android:text="清除"
+				android:textColor="@color/white"
+				android:textSize="16sp"
+				android:layout_width="wrap_content"
+				android:background="@android:color/transparent"
+				android:id="@+id/historybtnClear"
+				android:padding="10dp"/>
+
+		</LinearLayout>
+
+	</RelativeLayout>
+
+	<ListView
+		android:id="@+id/history_list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:persistentDrawingCache="animation|scrolling"/>
+
+</LinearLayout>
+

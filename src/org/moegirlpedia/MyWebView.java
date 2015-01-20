@@ -1,7 +1,7 @@
 package org.moegirlpedia;
 
 import java.net.URL;
-import java.net.URLConnection;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.io.InputStream;
 import java.io.BufferedInputStream;
@@ -102,6 +102,7 @@ public class MyWebView extends WebView
 			history_scroll.add(this.getScrollY());
 		}
 		curr_url = url;
+		loaded = false;
 		fetchURL(url);
 
 	}
@@ -118,10 +119,15 @@ public class MyWebView extends WebView
 		loaded = false;
 		this.loadDataWithBaseURL(getBaseUrl(curr_url), content, "text/html", "UTF-8", "");
 
-		final MyWebView that = this;
 		final String url = curr_url;
 		final int scroll = history_scroll.get(id);
 		history_scroll.remove(id);
+		restoreScroll(url,scroll);
+	}
+
+	private void restoreScroll(final String url, final int scroll)
+	{
+		final MyWebView that = this;
 		new Thread(new Runnable() {
 
 				@Override
@@ -174,9 +180,17 @@ public class MyWebView extends WebView
 						// 定义获取文件内容的URL  
 						URL myURL = new URL(url);  
 						// 打开URL链接  
-						URLConnection ucon = myURL.openConnection();  
+						HttpURLConnection ucon = (HttpURLConnection) myURL.openConnection(); 
 						// 使用InputStream，从URLConnection读取数据  
-						InputStream is = ucon.getInputStream();  
+						InputStream is;
+						if (ucon.getResponseCode() == 404)
+						{
+							is = ucon.getErrorStream();
+						}
+						else
+						{
+							is = ucon.getInputStream();
+						}
 						BufferedInputStream bis = new BufferedInputStream(is);  
 						// 用ByteArrayBuffer缓存  
 						ByteArrayBuffer baf = new ByteArrayBuffer(50);  
@@ -193,7 +207,7 @@ public class MyWebView extends WebView
 						e.printStackTrace();
 					}
 
-					if (!url.equals(curr_url)) return;
+					if ((!url.equals(curr_url))||(loaded)) return;
 					mHandler.post(new Runnable() {
 							@Override
 							public void run()
@@ -205,7 +219,7 @@ public class MyWebView extends WebView
 
 					if (myString.isEmpty())
 					{
-						myString = "网络错误";
+						myString = getContext().getString(R.string.html_network_error);
 					}
 					else
 					{
@@ -265,7 +279,7 @@ public class MyWebView extends WebView
 	
 	public void openInBrowser()
 	{
-		callBrowser(curr_url);
+		callBrowser(curr_url.replace("m.moegirl.org","zh.moegirl.org"));
 	}
 	
 	public void gotoEdit()
@@ -314,16 +328,21 @@ public class MyWebView extends WebView
 		outState.putSerializable("history_url", history_url);
 		outState.putSerializable("history_scroll", history_scroll);
 		outState.putString("curr_url", curr_url);
+		outState.putInt("scroll",this.getScrollY());
 		return ret;
 	}
 
 	@Override
     public WebBackForwardList restoreState(Bundle inState)
 	{
+		WebBackForwardList ret = super.restoreState(inState);
 		history_url = (ArrayList<String>) inState.getSerializable("history_url");
 		history_scroll = (ArrayList<Integer>) inState.getSerializable("history_scroll");
 		curr_url = inState.getString("curr_url");
-		return super.restoreState(inState);
+		int scroll = inState.getInt("scroll");
+		this.loadDataWithBaseURL(getBaseUrl(curr_url), GetCache(history_url.size()), "text/html", "UTF-8", "");
+		restoreScroll(curr_url,scroll);
+		return ret;
 	}
 
 	public void setProgressBar(ProgressBar pb)
@@ -395,6 +414,8 @@ public class MyWebView extends WebView
 		{
 			e.printStackTrace();
 		}
-		return value.toString();
+		String ret = value.toString();
+		if (ret.equals("null")) ret = "";
+		return ret;
 	}
 }

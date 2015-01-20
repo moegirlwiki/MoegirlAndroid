@@ -29,7 +29,7 @@
 		android:layout_centerVertical="true"
 		android:drawableLeft="@android:drawable/ic_menu_search"
 		android:background="@android:drawable/editbox_background"
-		android:text="@string/app_name"
+		android:text="萌娘百科"
 		android:textSize="20sp"
 		android:textColor="#000000"
 		android:id="@+id/title_bar_search_btn"/>

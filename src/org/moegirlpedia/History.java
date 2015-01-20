@@ -4,7 +4,9 @@ import org.moegirlpedia.R;
 import org.moegirlpedia.database.SQLiteHelper;
 import org.moegirlpedia.database.HistoryBean;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -73,6 +75,45 @@ public class History extends Activity
 		history_listview.setOnItemLongClickListener(new ListItemLongClick());
 		history_listview.setOnCreateContextMenuListener(new ListonCreate());
 
+		final History that = this;
+		Button btnClear = (Button) findViewById(R.id.historybtnClear);
+		btnClear.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					AlertDialog alertDialog = new AlertDialog.Builder(that).create();
+					alertDialog.setTitle("清空历史记录");
+					// prevents the user from escaping the dialog by hitting the Back button
+					alertDialog.setCancelable(true);
+					alertDialog.setMessage("确定吗？");
+					alertDialog.setButton("确定",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which)
+							{
+								//clear history
+								try
+								{
+									sqliteHelper.clear_history();
+									Log.e("clear_history", "cleared");
+								}
+								catch (Exception e)
+								{
+									Log.e("clear_history", "failed");
+								}
+								finish();
+							}
+						});
+					alertDialog.setButton2("取消", new DialogInterface.OnClickListener() { 
+
+							@Override 
+							public void onClick(DialogInterface dialog, int which) { 
+								// TODO Auto-generated method stub  
+							} 
+						});
+					alertDialog.show();
+				}
+			});
 	}
 
 	private ArrayList<HashMap<String, Object>> get_History()
