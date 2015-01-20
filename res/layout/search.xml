@@ -34,7 +34,7 @@
 			android:layout_width="match_parent"
 			android:id="@+id/searchEditText1"
 			android:imeOptions="actionGo"
-            android:singleLine="true"/>
+			android:singleLine="true"/>
 
 	</LinearLayout>
 

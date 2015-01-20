@@ -18,20 +18,26 @@ import android.view.View.OnClickListener;
 import android.text.*;
 import org.apache.http.util.*;
 import org.moegirlpedia.util.*;
+import org.moegirlpedia.database.*;
+import android.database.sqlite.*;
+import android.database.*;
 
 public class Search extends Activity
 {
+	private SQLiteHelper sqliteHelper;
 	private Handler mHandler = new Handler();
-	private ArrayList<HashMap<String, Object>> listItem;
+	private ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
 	private EditText edittext;
+	private ListView list;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
 	{
         super.onCreate(savedInstanceState);
+		sqliteHelper = new SQLiteHelper(getApplicationContext());
         setContentView(R.layout.search);
         //绑定Layout里面的ListView
-        final ListView list = (ListView) findViewById(R.id.search_list);
+        list = (ListView) findViewById(R.id.search_list);
 		ImageButton btnReturn = (ImageButton) findViewById(R.id.search_btnReturn);
 		btnReturn.setOnClickListener(new OnClickListener() {
 				public void onClick(View v)
@@ -57,7 +63,6 @@ public class Search extends Activity
 				}
 			});
 
-		final Search that = this;
 		edittext.addTextChangedListener(new TextWatcher() {
 				@Override
 				public void onTextChanged(CharSequence s, int start, int before, int count)
@@ -115,24 +120,14 @@ public class Search extends Activity
 											{
 												if (!word.equals(edittext.getText().toString())) return;
 												//生成动态数组，加入数据
-												listItem = new ArrayList<HashMap<String, Object>>();
+												listItem.clear();
 												for (int i=0;i < array.size();i++)
 												{
 													HashMap<String, Object> map = new HashMap<String, Object>();
 													map.put("ItemText", (String) array.get(i));
 													listItem.add(map);
 												}
-												//生成适配器的Item和动态数组对应的元素
-												SimpleAdapter listItemAdapter = new SimpleAdapter(that, listItem,//数据源 
-																								  R.layout.search_display_style,//ListItem的XML实现
-																								  //动态数组与ImageItem对应的子项        
-																								  new String[] {"ItemText"}, 
-																								  //ImageItem的XML文件里面的一个ImageView,两个TextView ID
-																								  new int[] {R.id.ItemText}
-																								  );
-
-												//添加并且显示
-												list.setAdapter(listItemAdapter);
+												setList();
 											}
 										});
 								}
@@ -168,7 +163,9 @@ public class Search extends Activity
 					edittext.setSelection(text.length());
 				}
 			});
-
+		
+		get_Search_History();
+		setList();
 
     }
 
@@ -181,10 +178,13 @@ public class Search extends Activity
 	
 	private void ret()
 	{
+		String name = edittext.getText().toString();
+		sqliteHelper.add_search_history(this,name);
+		
 		String url = "http://m.moegirl.org/";
 		try
 		{
-			url += URLEncoder.encode(edittext.getText().toString(), "utf-8");
+			url += URLEncoder.encode(name, "utf-8");
 		}
 		catch (UnsupportedEncodingException e)
 		{
@@ -196,6 +196,38 @@ public class Search extends Activity
 		intent.putExtra("url", url);
 		setResult(RESULT_OK, intent);
 		finish();
+	}
+	
+	private void get_Search_History()
+	{
+		SQLiteDatabase db = sqliteHelper.getWritableDatabase();
+		Cursor myCursor = db.query(sqliteHelper.TB__SEARCH_NAME, new String[] {
+								HistoryBean.NAME }, null, null,
+							null, null, HistoryBean.TIME + " DESC");
+		int name = myCursor.getColumnIndex(HistoryBean.NAME);
+		listItem.clear();
+		if (myCursor.moveToFirst())
+		{
+			do {
+				HashMap<String, Object> item = new HashMap<String, Object>();
+				item.put("ItemText", myCursor.getString(name));
+				listItem.add(item);
+			} while (myCursor.moveToNext());
+		}
+		myCursor.close();
+	}
+	
+	private void setList()
+	{
+		//生成适配器的Item和动态数组对应的元素
+		SimpleAdapter listItemAdapter = new SimpleAdapter(this, listItem,//数据源 
+														  R.layout.search_display_style,//ListItem的XML实现
+														  new String[] {"ItemText"}, 
+														  new int[] {R.id.ItemText}
+														  );
+
+		//添加并且显示
+		list.setAdapter(listItemAdapter);
 	}
 
 }

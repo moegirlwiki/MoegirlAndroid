@@ -11,8 +11,9 @@ import android.widget.Toast;
 public class SQLiteHelper extends SQLiteOpenHelper
 {
 	public static String DB_NAME = "History.db";// 数据库名称；处理为：所有的都记为记录，添加bookmark的标签，为true时则为书签，否则则是普通的历史记录
-	public static String TB__HISTORY_NAME = "allHistory";// 表名-历史记录和书签
-	public static String TB__BOOKMARK_NAME = "allBookmark";// 表名-首页快捷
+	public static String TB__HISTORY_NAME = "allHistory";// 表名-历史记录
+	public static String TB__BOOKMARK_NAME = "allBookmark";// 表名-书签
+	public static String TB__SEARCH_NAME = "Search";
 	private static SQLiteHelper instance = null;
 	private Cursor temp_cursor;
 
@@ -33,7 +34,7 @@ public class SQLiteHelper extends SQLiteOpenHelper
 	@Override
 	public void onCreate(SQLiteDatabase db)
 	{
-		// 创建默认的allHistory表
+		// 创建默认的表
 		db.execSQL("create table " + TB__HISTORY_NAME + " ( "
 				   + HistoryBean.NAME + " varchar, " + HistoryBean.URL
 				   + " varchar, " + HistoryBean.ISBOOKMARK + " integer, "
@@ -41,6 +42,9 @@ public class SQLiteHelper extends SQLiteOpenHelper
 		db.execSQL("create table " + TB__BOOKMARK_NAME + " ( "
 				   + HistoryBean.NAME + " varchar, " + HistoryBean.URL
 				   + " varchar, " + HistoryBean.ISBOOKMARK + " integer, "
+				   + HistoryBean.TIME + " integer)");
+		db.execSQL("create table " + TB__SEARCH_NAME + " ( "
+				   + HistoryBean.NAME + " varchar, "
 				   + HistoryBean.TIME + " integer)");
 	}
 
@@ -89,13 +93,16 @@ public class SQLiteHelper extends SQLiteOpenHelper
 		else
 		{
 			temp_cursor = db.rawQuery("select * from " + TB__BOOKMARK_NAME
-									  + " where name=" + "'" + name + "'"+ ";", null);
-			if (temp_cursor.moveToFirst()) {
+									  + " where name=" + "'" + name + "'" + ";", null);
+			if (temp_cursor.moveToFirst())
+			{
 				SQL = "update " + TB__BOOKMARK_NAME + " set " + HistoryBean.TIME
 					+ "=" + time + "," + HistoryBean.ISBOOKMARK + "="
 					+ isbookmark + " where name=" + "'" + name + "';";
 				TIP = "update";
-			} else {
+			}
+			else
+			{
 				// 疑问：关于整型引号问题
 				SQL = "insert into  " + TB__BOOKMARK_NAME + "(" + HistoryBean.TIME
 					+ "," + HistoryBean.NAME + "," + HistoryBean.URL + ","
@@ -117,6 +124,46 @@ public class SQLiteHelper extends SQLiteOpenHelper
 			return;
 		}
 	}
+
+	// 添加搜索历史记录
+	public void add_search_history(Context context, String name)
+	{
+		String SQL = null;
+		String TIP = null;
+		int time = (int) Math.floor(System.currentTimeMillis() / 1000);
+		SQLiteDatabase db = this.getWritableDatabase();
+		temp_cursor = db.rawQuery("select * from " + TB__SEARCH_NAME
+								  + " where name=" + "'" + name + "'" + ";", null);
+		if (temp_cursor.moveToFirst())
+		{
+			SQL = "update " + TB__SEARCH_NAME + " set " + HistoryBean.TIME
+				+ "=" + time + " where name=" + "'" + name + "';";
+			TIP = "update";
+		}
+		else
+		{
+// 疑问：关于整型引号问题
+			SQL = "insert into  " + TB__SEARCH_NAME + "(" + HistoryBean.TIME
+				+ "," + HistoryBean.NAME + ")" + "values(" + time + ",'"
+				+ name + "');";
+			TIP = "insert";
+		}
+
+
+		try
+		{
+			db.execSQL(SQL);
+			//Toast.makeText(context, TIP + "了记录", Toast.LENGTH_LONG).show();
+			Log.e("sqlite", TIP + "了搜索记录");
+		}
+		catch (SQLException e)
+		{
+			//Toast.makeText(context, TIP + "记录出错", Toast.LENGTH_LONG).show();
+			Log.e("splite", TIP + "了搜索记录");
+			return;
+		}
+	}
+
 	public void delete_single_record(String name)
 	{
 		String SQL = "delete from " + TB__HISTORY_NAME + " where name=" + "'" + name + "'";

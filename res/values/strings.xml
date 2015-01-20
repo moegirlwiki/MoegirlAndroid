@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">萌娘百科Plus</string>
+    <string name="app_name">萌娘百科Mobile</string>
 	<string name="bookmark">书签</string>
 	<string name="history">历史</string>
 	<string name="delete">删除</string>
@@ -13,7 +13,7 @@
 		网络错误
 	</string>
 	<string name="about_text">
-        <font size="20"><b>萌娘百科Android客户端 1.0</b></font>\n\n
+        <font size="20"><b>萌娘百科Android客户端 Beta</b></font>\n\n
 		By：%73 QQ:592823270\n
 		\n
 		萌娘百科：<a href="http://zh.moegirl.org">zh.moegirl.org</a> \n\n

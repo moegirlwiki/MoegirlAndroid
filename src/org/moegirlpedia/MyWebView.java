@@ -3,6 +3,7 @@ package org.moegirlpedia;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.io.File;
 import java.io.InputStream;
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
@@ -301,11 +302,12 @@ public class MyWebView extends WebView
 	
 	public void clear()
 	{
+		File cachedir = getContext().getCacheDir();
 		for (int i=0;i <= history_url.size();i++)
 		{
 			try
 			{
-				getContext().deleteFile("" + i);
+				new File(cachedir,"" + i).delete();
 			}
 			catch (Exception e)
 			{}
@@ -364,7 +366,9 @@ public class MyWebView extends WebView
 		{
 			Context context;
 			context = getContext();
-			FileOutputStream fos = context.openFileOutput("" + id, Context.MODE_PRIVATE);
+			File cachedir = context.getCacheDir();
+			File cachefile = new File(cachedir,""+id);
+			FileOutputStream fos = new FileOutputStream(cachefile);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
 			os.writeObject(valueToStore);
 			os.flush();
@@ -391,7 +395,9 @@ public class MyWebView extends WebView
 		{
 			Context context;
 			context = getContext();
-			FileInputStream filestream = context.openFileInput("" + id);
+			File cachedir = context.getCacheDir();
+			File cachefile = new File(cachedir,""+id);
+			FileInputStream filestream = new FileInputStream(cachefile);
 			ObjectInputStream ois = new ObjectInputStream(filestream);
 			value = ois.readObject();
 			ois.close();
@@ -415,7 +421,7 @@ public class MyWebView extends WebView
 			e.printStackTrace();
 		}
 		String ret = value.toString();
-		if (ret.equals("null")) ret = "";
+		if (ret.trim().equals("null")) ret = "";
 		return ret;
 	}
 }
