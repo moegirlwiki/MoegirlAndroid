@@ -202,5 +202,20 @@ public class SQLiteHelper extends SQLiteOpenHelper
 			Log.e("delete_history", "failed!");
 		}
 	}
+	
+	public void clear_search_history()
+	{
+		String SQL = "delete from " + TB__SEARCH_NAME;
+		SQLiteDatabase db = this.getWritableDatabase();
+		try
+		{
+			db.execSQL(SQL);
+			Log.e("delete_history", "did");
+		}
+		catch (Exception e)
+		{
+			Log.e("delete_history", "failed!");
+		}
+	}
 
 }

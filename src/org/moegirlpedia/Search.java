@@ -21,6 +21,7 @@ import org.moegirlpedia.util.*;
 import org.moegirlpedia.database.*;
 import android.database.sqlite.*;
 import android.database.*;
+import android.util.*;
 
 public class Search extends Activity
 {
@@ -45,6 +46,44 @@ public class Search extends Activity
 					finish();
 				}
 			});
+		final Search that = this;
+		ImageButton btnClear = (ImageButton) findViewById(R.id.searchBtnClear);
+		btnClear.setOnClickListener(new OnClickListener() {
+				public void onClick(View v)
+				{
+					AlertDialog alertDialog = new AlertDialog.Builder(that).create();
+					alertDialog.setTitle("清空搜索历史记录");
+					// prevents the user from escaping the dialog by hitting the Back button
+					alertDialog.setCancelable(true);
+					alertDialog.setMessage("确定吗？");
+					alertDialog.setButton("确定",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which)
+							{
+								//clear history
+								try
+								{
+									sqliteHelper.clear_search_history();
+									Log.e("clear_history", "cleared");
+								}
+								catch (Exception e)
+								{
+									Log.e("clear_history", "failed");
+								}
+								finish();
+							}
+						});
+					alertDialog.setButton2("取消", new DialogInterface.OnClickListener() { 
+
+							@Override 
+							public void onClick(DialogInterface dialog, int which) { 
+								// TODO Auto-generated method stub  
+							} 
+						});
+					alertDialog.show();
+				}
+			});
+		final LinearLayout historyBar = (LinearLayout) findViewById(R.id.searchHistoryBar);
 		edittext = (EditText) findViewById(R.id.searchEditText1);
 
 		edittext.setOnEditorActionListener(new OnEditorActionListener() {
@@ -67,12 +106,15 @@ public class Search extends Activity
 				@Override
 				public void onTextChanged(CharSequence s, int start, int before, int count)
 				{
+					historyBar.setVisibility(historyBar.GONE);
+					listItem.clear();
+					setList();
+					
 					new Thread(new Runnable() {
 
 							@Override
 							public void run()
 							{
-								// TODO Auto-generated method stub
 								String querytext = edittext.getText().toString();
 								String myString = "";
 								try

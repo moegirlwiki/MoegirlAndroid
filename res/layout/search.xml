@@ -17,7 +17,8 @@
 			android:layout_marginTop="3.0dip"
 			android:background="@android:color/transparent"
 			android:src="@android:drawable/ic_menu_revert"
-			android:id="@+id/search_btnReturn"/>
+			android:id="@+id/search_btnReturn"
+			android:padding="4dp"/>
 
 		<ImageView
 			android:layout_width="wrap_content"
@@ -35,6 +36,33 @@
 			android:id="@+id/searchEditText1"
 			android:imeOptions="actionGo"
 			android:singleLine="true"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:id="@+id/searchHistoryBar"
+		android:gravity="center_vertical">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:text="最近搜索:"
+			android:layout_width="match_parent"
+			android:textColor="#000000"
+			android:textSize="20sp"
+			android:textStyle="bold"
+			android:layout_weight="1.0"/>
+
+		<ImageButton
+			android:layout_height="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_width="wrap_content"
+			android:src="@drawable/history_clear"
+			android:id="@+id/searchBtnClear"
+			android:background="@drawable/selector_button_background"
+			android:padding="5dp"/>
 
 	</LinearLayout>
 
