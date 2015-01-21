@@ -7,6 +7,8 @@
 	<string name="delete">删除</string>
 	<string name="long_click_bookmark_title">书签操作</string>
     <string name="long_click_history_title">历史操作</string>
+	<string name="settings_loadimage">loadimage</string>
+	<string name="settings_loadflash">loadflash</string>
 	
 	<string name="html_network_error">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />

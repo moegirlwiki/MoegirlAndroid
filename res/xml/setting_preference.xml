@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	
+    <PreferenceCategory android:title="显示"> 
+        <CheckBoxPreference android:title="加载图片" android:key="@string/settings_loadimage" android:summary="加载页面中的图片" android:defaultValue="true" />
+        <CheckBoxPreference android:title="加载Flash" android:key="@string/settings_loadflash" android:summary="加载页面中的视频" android:defaultValue="true" />    
+    </PreferenceCategory>
+    
+</PreferenceScreen>

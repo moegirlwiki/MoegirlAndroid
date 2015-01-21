@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.graphics.Bitmap;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.util.AttributeSet;
 import android.view.View;
@@ -30,6 +31,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.PluginState;
 import android.webkit.WebViewClient;
 import android.webkit.WebBackForwardList;
+import android.preference.PreferenceManager;
 import android.net.Uri;
 import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EncodingUtils;
@@ -40,6 +42,7 @@ public class MyWebView extends WebView
 	private Boolean loaded = true;
 	private Handler mHandler = new Handler();
 	private SQLiteHelper sqliteHelper;
+	private SharedPreferences pref;
 	private ProgressBar mprogressBar = null;
 	private ArrayList<String> history_url = new ArrayList<String>();
 	private ArrayList<Integer> history_scroll = new ArrayList<Integer>();
@@ -55,9 +58,9 @@ public class MyWebView extends WebView
         super(context, attrs);  
         // 初始化
 		sqliteHelper = new SQLiteHelper(getContext());
+		pref = PreferenceManager.getDefaultSharedPreferences(getContext());
 
 		this.getSettings().setJavaScriptEnabled(true);
-		this.getSettings().setPluginState(PluginState.ON);
 		this.getSettings().setBuiltInZoomControls(true);
 		this.getSettings().setUseWideViewPort(true);
 		this.getSettings().setDefaultTextEncodingName("utf-8");
@@ -165,6 +168,12 @@ public class MyWebView extends WebView
 
 	private void fetchURL(final String url)
 	{
+		this.getSettings().setBlockNetworkImage(!pref.getBoolean(getContext().getString(R.string.settings_loadimage),true));
+		if (pref.getBoolean(getContext().getString(R.string.settings_loadflash),true))
+			this.getSettings().setPluginState(PluginState.ON);
+		else
+			this.getSettings().setPluginState(PluginState.OFF);
+		
 		final MyWebView that = this;
 		mprogressBar.setVisibility(View.VISIBLE);
 		mprogressBar.setMax(100);

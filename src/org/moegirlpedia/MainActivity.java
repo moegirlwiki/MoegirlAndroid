@@ -58,6 +58,8 @@ public class MainActivity extends Activity implements OnClickListener, OnMenuIte
 		menuQuit.setOnClickListener(this);
 		TextView menuLogin = (TextView) findViewById(R.id.menuLogin);
 		menuLogin.setOnClickListener(this);
+		TextView menuSettings = (TextView) findViewById(R.id.menuSettings);
+		menuSettings.setOnClickListener(this);
 		Button btnSearch = (Button) findViewById(R.id.title_bar_search_btn);
 		btnSearch.setOnClickListener(this);
 		ImageButton btnMore = (ImageButton) findViewById(R.id.title_bar_more_btn);
@@ -218,6 +220,9 @@ public class MainActivity extends Activity implements OnClickListener, OnMenuIte
 			case R.id.menuHistory:
 				Intent hintent = new Intent(MainActivity.this, History.class);
 				startActivityForResult(hintent, 0); 
+				break;
+			case R.id.menuSettings:
+				startActivity(new Intent(MainActivity.this, SettingActivity.class)); 
 				break;
 			case R.id.menuQuit:
 				mWebView.clear();
