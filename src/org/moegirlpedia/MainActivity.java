@@ -83,7 +83,7 @@ public class MainActivity extends Activity implements OnClickListener, OnMenuIte
 
 		if (savedInstanceState == null)
 		{
-			mWebView.loadUrl("http://m.moegirl.org/Mainpage");
+			mWebView.loadUrl(getString(R.string.baseurl)+"Mainpage?action=render");
 		}
 		else
 		{
@@ -211,7 +211,7 @@ public class MainActivity extends Activity implements OnClickListener, OnMenuIte
 				break;
 			case R.id.menuRandom:
 				closeDrawerLeft();
-				mWebView.loadUrl("http://m.moegirl.org/Special:%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2");
+				mWebView.loadUrl(getString(R.string.baseurl)+"Special:%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2?action=render");
 				break;
 			case R.id.menuBookmark:
 				Intent bintent = new Intent(MainActivity.this, Bookmark.class);
@@ -230,7 +230,7 @@ public class MainActivity extends Activity implements OnClickListener, OnMenuIte
 				break;
 			case R.id.menuLogin:
 				closeDrawerLeft();
-				mWebView.loadUrl("http://m.moegirl.org/Special:%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95?returnto=Mainpage");
+				mWebView.loadUrl("http://zh.moegirl.org/Special:%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95?returnto=Mainpage");
 				break;
 			case R.id.title_bar_search_btn:
 				Intent sintent = new Intent(MainActivity.this, Search.class);

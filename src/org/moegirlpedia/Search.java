@@ -223,7 +223,7 @@ public class Search extends Activity
 		String name = edittext.getText().toString();
 		sqliteHelper.add_search_history(this,name);
 		
-		String url = "http://m.moegirl.org/";
+		String url = getString(R.string.baseurl);
 		try
 		{
 			url += URLEncoder.encode(name, "utf-8");
@@ -233,7 +233,7 @@ public class Search extends Activity
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//url += "?action=render";
+		url += "?action=render";
 		Intent intent = new Intent(Search.this, MainActivity.class);  
 		intent.putExtra("url", url);
 		setResult(RESULT_OK, intent);

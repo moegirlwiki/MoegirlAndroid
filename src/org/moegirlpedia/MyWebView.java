@@ -1,10 +1,12 @@
 package org.moegirlpedia;
 
 import java.net.URL;
+import java.net.URLDecoder;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
@@ -13,11 +15,13 @@ import java.io.ObjectInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StreamCorruptedException;
+import java.io.UnsupportedEncodingException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.graphics.Bitmap;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.util.AttributeSet;
@@ -62,7 +66,7 @@ public class MyWebView extends WebView
 
 		this.getSettings().setJavaScriptEnabled(true);
 		this.getSettings().setBuiltInZoomControls(true);
-		this.getSettings().setUseWideViewPort(true);
+		//this.getSettings().setUseWideViewPort(true);
 		this.getSettings().setDefaultTextEncodingName("utf-8");
 		// this.getSettings().setBlockNetworkImage(true);
 
@@ -71,12 +75,15 @@ public class MyWebView extends WebView
 				@Override
 				public boolean shouldOverrideUrlLoading(WebView view, String url)
 				{
-					if (url.indexOf("http://m.moegirl.org/") < 0)
+					if (url.indexOf(getContext().getString(R.string.baseurl)) < 0)
 					{
 						callBrowser(url);
 						return true;
 					}
-					that.loadUrl(url);
+					String surl = url;
+					if (url.indexOf("?action=render") < 0)
+						surl += "?action=render";
+					that.loadUrl(surl);
 					return true;
 				}
 				@Override
@@ -174,6 +181,10 @@ public class MyWebView extends WebView
 		else
 			this.getSettings().setPluginState(PluginState.OFF);
 		
+		final String errorPage = getAssetsFile("error.html"); 
+		final String pageHeader = getAssetsFile("pageheader.html"); 
+		final String pageFooter = getAssetsFile("pagefooter.html"); 
+		
 		final MyWebView that = this;
 		mprogressBar.setVisibility(View.VISIBLE);
 		mprogressBar.setMax(100);
@@ -184,6 +195,7 @@ public class MyWebView extends WebView
 				public void run()
 				{
 					// TODO Auto-generated method stub
+					String realUrl = url;
 					String myString = "";
 					try
 					{  
@@ -191,6 +203,7 @@ public class MyWebView extends WebView
 						URL myURL = new URL(url);  
 						// 打开URL链接  
 						HttpURLConnection ucon = (HttpURLConnection) myURL.openConnection(); 
+						ucon.addRequestProperty("User-Agent","MoeGirlMobile/1.0");
 						// 使用InputStream，从URLConnection读取数据  
 						InputStream is;
 						if (ucon.getResponseCode() == 404)
@@ -211,6 +224,8 @@ public class MyWebView extends WebView
 						}  
 						// 将缓存的内容转化为String,用UTF-8编码  
 						myString = EncodingUtils.getString(baf.toByteArray(), "UTF-8");  
+						
+						realUrl = ucon.getURL().toString();
 					}
 					catch (Exception e)
 					{  
@@ -226,17 +241,19 @@ public class MyWebView extends WebView
 							}
 						});
 
+					curr_url = realUrl.replace("index.php?title=","").replace("&action=render","?action=render");
 
 					if (myString.isEmpty())
 					{
-						myString = getContext().getString(R.string.html_network_error);
+						myString = errorPage;
 					}
 					else
 					{
-						myString = myString.replace("window.scrollTo(0,1);", "");
-						myString = myString.replace("<div id=\"headerbar\">", "<div id=\"headerbar\" style=\"display:none\">");
-						myString = myString.replace("<div id=\"drop-fade\">", "<div id=\"drop-fade\" style=\"display:none\">");
-						myString = myString.replace("style=\"display:inline-block;width:320px;height:100px\"", "style=\"display:none;\"");
+						//myString = myString.replace("window.scrollTo(0,1);", "");
+						//myString = myString.replace("<div id=\"headerbar\">", "<div id=\"headerbar\" style=\"display:none\">");
+						//myString = myString.replace("<div id=\"drop-fade\">", "<div id=\"drop-fade\" style=\"display:none\">");
+						//myString = myString.replace("style=\"display:inline-block;width:320px;height:100px\"", "style=\"display:none;\"");
+						myString = pageHeader + "<h2>"+getTitle()+"</h2><hr>" + myString + pageFooter;
 					}
 
 					mHandler.post(new Runnable() {
@@ -272,10 +289,31 @@ public class MyWebView extends WebView
 		return a;
 	}
 
+	@Override
+	public String getTitle()
+	{
+		String a = curr_url;
+		int i = a.indexOf('?');
+		if (i != -1)
+			a = a.substring(0, i);
+		i = a.lastIndexOf('/');
+		a = a.substring(i+1, a.length());
+		try
+		{
+			a = URLDecoder.decode(a, "utf-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return a;
+	}
+	
 	public void share()
 	{
-		String title = this.getTitle();
-		String url = curr_url.replace("m.moegirl.org","zh.moegirl.org");
+		String title = getTitle();
+		String url = curr_url.replace("?action=render","");
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/plain");
 		intent.putExtra(Intent.EXTRA_SUBJECT, title);
@@ -289,17 +327,17 @@ public class MyWebView extends WebView
 	
 	public void openInBrowser()
 	{
-		callBrowser(curr_url.replace("m.moegirl.org","zh.moegirl.org"));
+		callBrowser(curr_url.replace("?action=render",""));
 	}
 	
 	public void gotoEdit()
 	{
-		if ((curr_url.indexOf("?")>=0)||(curr_url.indexOf("Special:")>=0))
+		if (curr_url.indexOf("Special:")>=0)
 		{
 			Toast.makeText(getContext(), "本页无法编辑！", Toast.LENGTH_LONG).show();
 			return;
 		}
-		this.loadUrl(curr_url+"?action=edit");
+		this.loadUrl(curr_url.replace("action=render","action=edit"));
 	}
 	
 	public void addBookmark()
@@ -432,5 +470,49 @@ public class MyWebView extends WebView
 		String ret = value.toString();
 		if (ret.trim().equals("null")) ret = "";
 		return ret;
+	}
+	
+	private String readTextFile(InputStream inputStream) { 
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); 
+
+		byte buf[] = new byte[1024]; 
+
+		int len; 
+
+		try { 
+
+			while ((len = inputStream.read(buf)) != -1) { 
+
+				outputStream.write(buf, 0, len); 
+
+			} 
+
+			outputStream.close(); 
+
+			inputStream.close(); 
+
+		} catch (IOException e) { 
+
+		} 
+
+		return outputStream.toString(); 
+	}
+	
+	private String getAssetsFile(String fn)
+	{
+		AssetManager assetManager = getContext().getAssets(); 
+		InputStream inputStream = null; 
+		try { 
+
+			inputStream = assetManager.open(fn); 
+
+		} catch (Exception e) { 
+
+			Log.e("tag", e.getMessage()); 
+
+		} 
+
+		return readTextFile(inputStream);
 	}
 }

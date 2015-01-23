@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">萌娘百科Mobile</string>
+	<string name="baseurl">http://zh.moegirl.org/</string>
 	<string name="bookmark">书签</string>
 	<string name="history">历史</string>
 	<string name="delete">删除</string>
@@ -10,12 +11,8 @@
 	<string name="settings_loadimage">loadimage</string>
 	<string name="settings_loadflash">loadflash</string>
 	
-	<string name="html_network_error">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-		网络错误
-	</string>
 	<string name="about_text">
-        <font size="20"><b>萌娘百科Android客户端 Beta</b></font>\n\n
+        <font size="20"><b>萌娘百科Mobile 1.0</b></font>\n\n
 		By：%73 QQ:592823270\n
 		\n
 		萌娘百科：<a href="http://zh.moegirl.org">zh.moegirl.org</a> \n\n
