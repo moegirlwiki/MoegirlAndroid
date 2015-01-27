@@ -44,7 +44,6 @@ import org.moegirlpedia.database.SQLiteHelper;
 import org.htmlparser.*;
 import org.htmlparser.util.*;
 import org.htmlparser.filters.*;
-import android.os.*;
 
 public class MyWebView extends WebView
 {
@@ -74,6 +73,12 @@ public class MyWebView extends WebView
 		this.getSettings().setBuiltInZoomControls(true);
 		this.getSettings().setDefaultTextEncodingName("utf-8");
 		// this.getSettings().setBlockNetworkImage(true);
+		// 设置缓存模式
+		this.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+		// 启用缓存
+		this.getSettings().setAppCacheEnabled(true);
+		// 设置最大缓存容量---100M
+		this.getSettings().setAppCacheMaxSize(1024 * 1024 * 100);
 
 		final MyWebView that = this;
 		this.setWebViewClient(new WebViewClient() {
@@ -86,7 +91,7 @@ public class MyWebView extends WebView
 						callBrowser(url);
 						return true;
 					}
-					if ((url.indexOf("?action=render") < 0)&&(url.indexOf("?") < 0))
+					if ((url.indexOf("?action=render") < 0) && (url.indexOf("?") < 0))
 						surl += "?action=render";
 					that.loadUrl(surl);
 					return true;
@@ -119,8 +124,8 @@ public class MyWebView extends WebView
 			history_scroll.add(this.getScrollY());
 		}
 		String surl = url;
-		if ((surl.indexOf("Special:") >= 0)||(surl.indexOf("File:") >= 0))
-			surl = surl.replace("?action=render","");
+		if ((surl.indexOf("Special:") >= 0) || (surl.indexOf("File:") >= 0))
+			surl = surl.replace("?action=render", "");
 		curr_url = surl;
 		loaded = false;
 		fetchURL(surl);
@@ -179,6 +184,7 @@ public class MyWebView extends WebView
 
 	public void refresh()
 	{
+		loaded = false;
 		fetchURL(curr_url);
 	}
 
@@ -261,20 +267,11 @@ public class MyWebView extends WebView
 					{
 						if (myString.indexOf("<div id=\"mw-navigation\">") < 0)
 						{
-							if (url.indexOf("m.moegirl.org") < 0)
-							{
-								if (myString.indexOf("title=\"Special:用户登录\">登录</a>才能查看其它页面。") < 0)
-									myString = pageHeader + "<h2>" + getTitle() + "</h2><hr>" + myString + pageFooter;
-								else
-									myString = "需要登陆";
-							}
+
+							if (myString.indexOf("title=\"Special:用户登录\">登录</a>才能查看其它页面。") < 0)
+								myString = pageHeader + "<h2>" + getTitle() + "</h2><hr>" + myString + pageFooter;
 							else
-							{
-								myString = myString.replace("window.scrollTo(0,1);", "");
-								myString = myString.replace("<div id=\"headerbar\">", "<div id=\"headerbar\" style=\"display:none\">");
-								myString = myString.replace("<div id=\"drop-fade\">", "<div id=\"drop-fade\" style=\"display:none\">");
-								myString = myString.replace("style=\"display:inline-block;width:320px;height:100px\"", "style=\"display:none;\"");
-							}
+								myString = "需要登陆";
 						}
 						else
 						{
@@ -288,7 +285,14 @@ public class MyWebView extends WebView
 									{
 										Node textnode = (Node) nodes.elementAt(i);
 										if (textnode.getText().indexOf("div id=\"mw-content-text\"") >= 0)
-											myString = oldcustomize + "<h2>" + getTitle() + "</h2><hr>" + textnode.toHtml();
+										{
+											if (curr_url.indexOf("/Mainpage") < 0)
+												myString = oldcustomize + "<h2>" + getTitle() + "</h2><hr>" + textnode.toHtml();
+											else
+												myString = "<meta name=\"viewport\" content=\"width=device-width, user-scalable=yes, initial-scale=0.9, maximum-scale=1.0, minimum-scale=0.9\">"
+													+ oldcustomize + "<h2>" + getTitle() + "</h2><hr>" + textnode.toHtml();
+											break;
+										}
 									}
 								}
 							}
