@@ -83,7 +83,7 @@ public class MainActivity extends Activity implements OnClickListener, OnMenuIte
 
 		if (savedInstanceState == null)
 		{
-			mWebView.loadUrl(getString(R.string.baseurl)+"Mainpage?action=render");
+			mWebView.loadUrl(getString(R.string.baseurl) + "Mainpage");
 		}
 		else
 		{

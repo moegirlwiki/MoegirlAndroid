@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 import android.widget.ProgressBar;
+import android.widget.FrameLayout;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebSettings;
@@ -40,6 +41,10 @@ import android.net.Uri;
 import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EncodingUtils;
 import org.moegirlpedia.database.SQLiteHelper;
+import org.htmlparser.*;
+import org.htmlparser.util.*;
+import org.htmlparser.filters.*;
+import android.os.*;
 
 public class MyWebView extends WebView
 {
@@ -65,8 +70,8 @@ public class MyWebView extends WebView
 		pref = PreferenceManager.getDefaultSharedPreferences(getContext());
 
 		this.getSettings().setJavaScriptEnabled(true);
+		this.getSettings().setUseWideViewPort(false);
 		this.getSettings().setBuiltInZoomControls(true);
-		//this.getSettings().setUseWideViewPort(true);
 		this.getSettings().setDefaultTextEncodingName("utf-8");
 		// this.getSettings().setBlockNetworkImage(true);
 
@@ -75,13 +80,13 @@ public class MyWebView extends WebView
 				@Override
 				public boolean shouldOverrideUrlLoading(WebView view, String url)
 				{
+					String surl = url;
 					if (url.indexOf(getContext().getString(R.string.baseurl)) < 0)
 					{
 						callBrowser(url);
 						return true;
 					}
-					String surl = url;
-					if (url.indexOf("?action=render") < 0)
+					if ((url.indexOf("?action=render") < 0)&&(url.indexOf("?") < 0))
 						surl += "?action=render";
 					that.loadUrl(surl);
 					return true;
@@ -101,6 +106,7 @@ public class MyWebView extends WebView
 					super.onPageStarted(view, url, favicon);
 				}
 			});
+		this.setWebChromeClient(new WebChromeClient());
 
     }  
 
@@ -112,9 +118,12 @@ public class MyWebView extends WebView
 			history_url.add(curr_url);
 			history_scroll.add(this.getScrollY());
 		}
-		curr_url = url;
+		String surl = url;
+		if ((surl.indexOf("Special:") >= 0)||(surl.indexOf("File:") >= 0))
+			surl = surl.replace("?action=render","");
+		curr_url = surl;
 		loaded = false;
-		fetchURL(url);
+		fetchURL(surl);
 
 	}
 
@@ -133,7 +142,7 @@ public class MyWebView extends WebView
 		final String url = curr_url;
 		final int scroll = history_scroll.get(id);
 		history_scroll.remove(id);
-		restoreScroll(url,scroll);
+		restoreScroll(url, scroll);
 	}
 
 	private void restoreScroll(final String url, final int scroll)
@@ -175,16 +184,17 @@ public class MyWebView extends WebView
 
 	private void fetchURL(final String url)
 	{
-		this.getSettings().setBlockNetworkImage(!pref.getBoolean(getContext().getString(R.string.settings_loadimage),true));
-		if (pref.getBoolean(getContext().getString(R.string.settings_loadflash),true))
+		this.getSettings().setBlockNetworkImage(!pref.getBoolean(getContext().getString(R.string.settings_loadimage), true));
+		if (pref.getBoolean(getContext().getString(R.string.settings_loadflash), true))
 			this.getSettings().setPluginState(PluginState.ON);
 		else
 			this.getSettings().setPluginState(PluginState.OFF);
-		
+
 		final String errorPage = getAssetsFile("error.html"); 
 		final String pageHeader = getAssetsFile("pageheader.html"); 
 		final String pageFooter = getAssetsFile("pagefooter.html"); 
-		
+		final String oldcustomize = getAssetsFile("oldcustomize.html"); 
+
 		final MyWebView that = this;
 		mprogressBar.setVisibility(View.VISIBLE);
 		mprogressBar.setMax(100);
@@ -203,7 +213,7 @@ public class MyWebView extends WebView
 						URL myURL = new URL(url);  
 						// 打开URL链接  
 						HttpURLConnection ucon = (HttpURLConnection) myURL.openConnection(); 
-						ucon.addRequestProperty("User-Agent","MoeGirlMobile/1.0");
+						ucon.addRequestProperty("User-Agent", getContext().getString(R.string.useragent));
 						// 使用InputStream，从URLConnection读取数据  
 						InputStream is;
 						if (ucon.getResponseCode() == 404)
@@ -224,7 +234,7 @@ public class MyWebView extends WebView
 						}  
 						// 将缓存的内容转化为String,用UTF-8编码  
 						myString = EncodingUtils.getString(baf.toByteArray(), "UTF-8");  
-						
+
 						realUrl = ucon.getURL().toString();
 					}
 					catch (Exception e)
@@ -232,7 +242,7 @@ public class MyWebView extends WebView
 						e.printStackTrace();
 					}
 
-					if ((!url.equals(curr_url))||(loaded)) return;
+					if ((!url.equals(curr_url)) || (loaded)) return;
 					mHandler.post(new Runnable() {
 							@Override
 							public void run()
@@ -241,7 +251,7 @@ public class MyWebView extends WebView
 							}
 						});
 
-					curr_url = realUrl.replace("index.php?title=","").replace("&action=render","?action=render");
+					curr_url = realUrl.replace("index.php?title=", "").replace("&action=render", "?action=render");
 
 					if (myString.isEmpty())
 					{
@@ -249,11 +259,44 @@ public class MyWebView extends WebView
 					}
 					else
 					{
-						//myString = myString.replace("window.scrollTo(0,1);", "");
-						//myString = myString.replace("<div id=\"headerbar\">", "<div id=\"headerbar\" style=\"display:none\">");
-						//myString = myString.replace("<div id=\"drop-fade\">", "<div id=\"drop-fade\" style=\"display:none\">");
-						//myString = myString.replace("style=\"display:inline-block;width:320px;height:100px\"", "style=\"display:none;\"");
-						myString = pageHeader + "<h2>"+getTitle()+"</h2><hr>" + myString + pageFooter;
+						if (myString.indexOf("<div id=\"mw-navigation\">") < 0)
+						{
+							if (url.indexOf("m.moegirl.org") < 0)
+							{
+								if (myString.indexOf("title=\"Special:用户登录\">登录</a>才能查看其它页面。") < 0)
+									myString = pageHeader + "<h2>" + getTitle() + "</h2><hr>" + myString + pageFooter;
+								else
+									myString = "需要登陆";
+							}
+							else
+							{
+								myString = myString.replace("window.scrollTo(0,1);", "");
+								myString = myString.replace("<div id=\"headerbar\">", "<div id=\"headerbar\" style=\"display:none\">");
+								myString = myString.replace("<div id=\"drop-fade\">", "<div id=\"drop-fade\" style=\"display:none\">");
+								myString = myString.replace("style=\"display:inline-block;width:320px;height:100px\"", "style=\"display:none;\"");
+							}
+						}
+						else
+						{
+							try
+							{
+								Parser parser = new Parser(myString);
+								NodeList nodes = parser.extractAllNodesThatMatch(new TagNameFilter("DIV"));
+								if (nodes != null)
+								{
+									for (int i = 0; i < nodes.size(); i++)
+									{
+										Node textnode = (Node) nodes.elementAt(i);
+										if (textnode.getText().indexOf("div id=\"mw-content-text\"") >= 0)
+											myString = oldcustomize + "<h2>" + getTitle() + "</h2><hr>" + textnode.toHtml();
+									}
+								}
+							}
+							catch (ParserException e)
+							{
+								e.printStackTrace();
+							}
+						}
 					}
 
 					mHandler.post(new Runnable() {
@@ -297,7 +340,7 @@ public class MyWebView extends WebView
 		if (i != -1)
 			a = a.substring(0, i);
 		i = a.lastIndexOf('/');
-		a = a.substring(i+1, a.length());
+		a = a.substring(i + 1, a.length());
 		try
 		{
 			a = URLDecoder.decode(a, "utf-8");
@@ -309,11 +352,11 @@ public class MyWebView extends WebView
 		}
 		return a;
 	}
-	
+
 	public void share()
 	{
 		String title = getTitle();
-		String url = curr_url.replace("?action=render","");
+		String url = curr_url.replace("?action=render", "");
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/plain");
 		intent.putExtra(Intent.EXTRA_SUBJECT, title);
@@ -322,31 +365,31 @@ public class MyWebView extends WebView
 			title + " "
 			+ url + " #萌娘百科#");
 		getContext().startActivity(Intent
-					  .createChooser(intent, "分享 - " + title));
+								   .createChooser(intent, "分享 - " + title));
 	}
-	
+
 	public void openInBrowser()
 	{
-		callBrowser(curr_url.replace("?action=render",""));
+		callBrowser(curr_url.replace("?action=render", ""));
 	}
-	
+
 	public void gotoEdit()
 	{
-		if (curr_url.indexOf("Special:")>=0)
+		if (curr_url.indexOf("Special:") >= 0)
 		{
 			Toast.makeText(getContext(), "本页无法编辑！", Toast.LENGTH_LONG).show();
 			return;
 		}
-		this.loadUrl(curr_url.replace("action=render","action=edit"));
+		this.loadUrl(curr_url.replace("action=render", "action=edit"));
 	}
-	
+
 	public void addBookmark()
 	{
 		sqliteHelper.add_history(getContext(),
 								 this.getTitle(), curr_url, 1);
 		Toast.makeText(getContext(), "已加入书签！", Toast.LENGTH_LONG).show();
 	}
-	
+
 	public void clear()
 	{
 		File cachedir = getContext().getCacheDir();
@@ -354,7 +397,7 @@ public class MyWebView extends WebView
 		{
 			try
 			{
-				new File(cachedir,"" + i).delete();
+				new File(cachedir, "" + i).delete();
 			}
 			catch (Exception e)
 			{}
@@ -377,7 +420,7 @@ public class MyWebView extends WebView
 		outState.putSerializable("history_url", history_url);
 		outState.putSerializable("history_scroll", history_scroll);
 		outState.putString("curr_url", curr_url);
-		outState.putInt("scroll",this.getScrollY());
+		outState.putInt("scroll", this.getScrollY());
 		return ret;
 	}
 
@@ -390,7 +433,7 @@ public class MyWebView extends WebView
 		curr_url = inState.getString("curr_url");
 		int scroll = inState.getInt("scroll");
 		this.loadDataWithBaseURL(getBaseUrl(curr_url), GetCache(history_url.size()), "text/html", "UTF-8", "");
-		restoreScroll(curr_url,scroll);
+		restoreScroll(curr_url, scroll);
 		return ret;
 	}
 
@@ -406,7 +449,7 @@ public class MyWebView extends WebView
 		intent.setData(content_url);
 		getContext().startActivity(intent);
 	}
-	
+
 	private void StoreCache(final int id, final String valueToStore)
 	{
 		try
@@ -414,7 +457,7 @@ public class MyWebView extends WebView
 			Context context;
 			context = getContext();
 			File cachedir = context.getCacheDir();
-			File cachefile = new File(cachedir,""+id);
+			File cachefile = new File(cachedir, "" + id);
 			FileOutputStream fos = new FileOutputStream(cachefile);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
 			os.writeObject(valueToStore);
@@ -443,7 +486,7 @@ public class MyWebView extends WebView
 			Context context;
 			context = getContext();
 			File cachedir = context.getCacheDir();
-			File cachefile = new File(cachedir,""+id);
+			File cachefile = new File(cachedir, "" + id);
 			FileInputStream filestream = new FileInputStream(cachefile);
 			ObjectInputStream ois = new ObjectInputStream(filestream);
 			value = ois.readObject();
@@ -471,8 +514,9 @@ public class MyWebView extends WebView
 		if (ret.trim().equals("null")) ret = "";
 		return ret;
 	}
-	
-	private String readTextFile(InputStream inputStream) { 
+
+	private String readTextFile(InputStream inputStream)
+	{ 
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); 
 
@@ -480,9 +524,11 @@ public class MyWebView extends WebView
 
 		int len; 
 
-		try { 
+		try
+		{ 
 
-			while ((len = inputStream.read(buf)) != -1) { 
+			while ((len = inputStream.read(buf)) != -1)
+			{ 
 
 				outputStream.write(buf, 0, len); 
 
@@ -492,22 +538,27 @@ public class MyWebView extends WebView
 
 			inputStream.close(); 
 
-		} catch (IOException e) { 
+		}
+		catch (IOException e)
+		{ 
 
 		} 
 
 		return outputStream.toString(); 
 	}
-	
+
 	private String getAssetsFile(String fn)
 	{
 		AssetManager assetManager = getContext().getAssets(); 
 		InputStream inputStream = null; 
-		try { 
+		try
+		{ 
 
 			inputStream = assetManager.open(fn); 
 
-		} catch (Exception e) { 
+		}
+		catch (Exception e)
+		{ 
 
 			Log.e("tag", e.getMessage()); 
 

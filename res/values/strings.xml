@@ -3,6 +3,7 @@
 
     <string name="app_name">萌娘百科Mobile</string>
 	<string name="baseurl">http://zh.moegirl.org/</string>
+	<string name="useragent">MoeGirlMobile/1.5</string>
 	<string name="bookmark">书签</string>
 	<string name="history">历史</string>
 	<string name="delete">删除</string>
@@ -14,6 +15,7 @@
 	<string name="about_text">
         <font size="20"><b>萌娘百科Mobile 1.0</b></font>\n\n
 		By：%73 QQ:592823270\n
+		感谢 Illvili 和 MiChairm 提供技术支持\n
 		\n
 		萌娘百科：<a href="http://zh.moegirl.org">zh.moegirl.org</a> \n\n
 		<b>萌娘百科的更新姬们：</b>\n

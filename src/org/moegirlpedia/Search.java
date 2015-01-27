@@ -106,7 +106,7 @@ public class Search extends Activity
 				@Override
 				public void onTextChanged(CharSequence s, int start, int before, int count)
 				{
-					historyBar.setVisibility(historyBar.GONE);
+					historyBar.setVisibility(View.GONE);
 					listItem.clear();
 					setList();
 					
@@ -130,9 +130,10 @@ public class Search extends Activity
 								{  
 									// 定义获取文件内容的URL  
 									URL myURL = new URL(  
-										"http://m.moegirl.org/api.php?action=opensearch&limit=100&search=" + querytext);  
+										getString(R.string.baseurl) + "api.php?action=opensearch&limit=100&search=" + querytext);  
 									// 打开URL链接  
 									URLConnection ucon = myURL.openConnection();  
+									ucon.addRequestProperty("User-Agent", getString(R.string.useragent));
 									// 使用InputStream，从URLConnection读取数据  
 									InputStream is = ucon.getInputStream();  
 									BufferedInputStream bis = new BufferedInputStream(is);  
