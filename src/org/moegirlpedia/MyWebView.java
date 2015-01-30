@@ -41,9 +41,8 @@ import android.net.Uri;
 import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EncodingUtils;
 import org.moegirlpedia.database.SQLiteHelper;
-import org.htmlparser.*;
-import org.htmlparser.util.*;
-import org.htmlparser.filters.*;
+import org.jsoup.nodes.*;
+import org.jsoup.*;
 
 public class MyWebView extends WebView
 {
@@ -275,31 +274,20 @@ public class MyWebView extends WebView
 						}
 						else
 						{
-							try
-							{
-								Parser parser = new Parser(myString);
-								NodeList nodes = parser.extractAllNodesThatMatch(new TagNameFilter("DIV"));
-								if (nodes != null)
+								try
 								{
-									for (int i = 0; i < nodes.size(); i++)
-									{
-										Node textnode = (Node) nodes.elementAt(i);
-										if (textnode.getText().indexOf("div id=\"mw-content-text\"") >= 0)
-										{
-											if (curr_url.indexOf("/Mainpage") < 0)
-												myString = oldcustomize + "<h2>" + getTitle() + "</h2><hr>" + textnode.toHtml();
-											else
-												myString = "<meta name=\"viewport\" content=\"width=device-width, user-scalable=yes, initial-scale=0.9, maximum-scale=1.0, minimum-scale=0.9\">"
-													+ oldcustomize + "<h2>" + getTitle() + "</h2><hr>" + textnode.toHtml();
-											break;
-										}
-									}
+									Document doc = Jsoup.parse(myString);
+									Element content = doc.getElementById("mw-content-text");
+									if (curr_url.indexOf("/Mainpage") < 0)
+										myString = oldcustomize + "<h2>" + getTitle() + "</h2><hr>" + content.html();
+									else
+										myString = "<meta name=\"viewport\" content=\"width=device-width, user-scalable=yes, initial-scale=0.9, maximum-scale=1.0, minimum-scale=0.9\">"
+											+ oldcustomize + "<h2>" + getTitle() + "</h2><hr>" + content.html();
 								}
-							}
-							catch (ParserException e)
-							{
-								e.printStackTrace();
-							}
+								catch (Exception e)
+								{
+									e.printStackTrace();
+								}
 						}
 					}
 
@@ -436,6 +424,7 @@ public class MyWebView extends WebView
 		history_scroll = (ArrayList<Integer>) inState.getSerializable("history_scroll");
 		curr_url = inState.getString("curr_url");
 		int scroll = inState.getInt("scroll");
+		loaded = false;
 		this.loadDataWithBaseURL(getBaseUrl(curr_url), GetCache(history_url.size()), "text/html", "UTF-8", "");
 		restoreScroll(curr_url, scroll);
 		return ret;

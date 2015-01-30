@@ -227,7 +227,7 @@ public class Search extends Activity
 		String url = getString(R.string.baseurl);
 		try
 		{
-			url += URLEncoder.encode(name, "utf-8");
+			url += URLEncoder.encode(name, "utf-8").replace("+","%20");
 		}
 		catch (UnsupportedEncodingException e)
 		{
