@@ -1,27 +1,46 @@
 package org.moegirlpedia;
 
-import android.app.*;
-import android.content.*;
-import android.content.res.*;
-import android.os.*;
-import android.view.*;
-import android.view.View.*;
-import android.view.inputmethod.*;
-import android.widget.*;
-import android.widget.AdapterView.*;
-import android.widget.TextView.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+import org.apache.http.util.ByteArrayBuffer;
+import org.apache.http.util.EncodingUtils;
+import org.moegirlpedia.database.HistoryBean;
+import org.moegirlpedia.database.SQLiteHelper;
+import org.moegirlpedia.util.JsonUtil;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.text.*;
-import org.apache.http.util.*;
-import org.moegirlpedia.util.*;
-import org.moegirlpedia.database.*;
-import android.database.sqlite.*;
-import android.database.*;
-import android.util.*;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 public class Search extends Activity
 {
@@ -244,7 +263,7 @@ public class Search extends Activity
 	private void get_Search_History()
 	{
 		SQLiteDatabase db = sqliteHelper.getWritableDatabase();
-		Cursor myCursor = db.query(sqliteHelper.TB__SEARCH_NAME, new String[] {
+		Cursor myCursor = db.query(SQLiteHelper.TB__SEARCH_NAME, new String[] {
 								HistoryBean.NAME }, null, null,
 							null, null, HistoryBean.TIME + " DESC");
 		int name = myCursor.getColumnIndex(HistoryBean.NAME);

@@ -1,48 +1,49 @@
 package org.moegirlpedia;
 
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.io.File;
-import java.io.InputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.io.UnsupportedEncodingException;
-import android.os.Bundle;
-import android.os.Handler;
-import android.graphics.Bitmap;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.AssetManager;
-import android.content.SharedPreferences;
-import android.util.Log;
-import android.util.AttributeSet;
-import android.view.View;
-import android.view.Window;
-import android.widget.Toast;
-import android.widget.ProgressBar;
-import android.widget.FrameLayout;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebSettings;
-import android.webkit.WebSettings.PluginState;
-import android.webkit.WebViewClient;
-import android.webkit.WebBackForwardList;
-import android.preference.PreferenceManager;
-import android.net.Uri;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+
 import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EncodingUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.moegirlpedia.database.SQLiteHelper;
-import org.jsoup.nodes.*;
-import org.jsoup.*;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
+import android.webkit.WebBackForwardList;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebSettings.PluginState;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 public class MyWebView extends WebView
 {
@@ -76,8 +77,6 @@ public class MyWebView extends WebView
 		this.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
 		// 启用缓存
 		this.getSettings().setAppCacheEnabled(true);
-		// 设置最大缓存容量---100M
-		this.getSettings().setAppCacheMaxSize(1024 * 1024 * 100);
 
 		final MyWebView that = this;
 		this.setWebViewClient(new WebViewClient() {

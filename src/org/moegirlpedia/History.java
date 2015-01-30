@@ -1,19 +1,23 @@
 package org.moegirlpedia;
 
-import org.moegirlpedia.R;
-import org.moegirlpedia.database.SQLiteHelper;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.moegirlpedia.database.HistoryBean;
+import org.moegirlpedia.database.SQLiteHelper;
+
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.Window;
@@ -23,9 +27,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import android.database.Cursor;
 
 public class History extends Activity
 {
@@ -33,7 +34,6 @@ public class History extends Activity
 	private SQLiteHelper sqliteHelper;
 	private Cursor myCursor;
 	private ListView history_listview;
-	private Button back_button;
 	public static String operaString = null;
 
 	@Override
@@ -119,7 +119,7 @@ public class History extends Activity
 	private ArrayList<HashMap<String, Object>> get_History()
 	{
 		SQLiteDatabase db = sqliteHelper.getWritableDatabase();
-		myCursor = db.query(sqliteHelper.TB__HISTORY_NAME, new String[] {
+		myCursor = db.query(SQLiteHelper.TB__HISTORY_NAME, new String[] {
 								HistoryBean.NAME, HistoryBean.URL }, "isbookmark=0", null,
 							null, null, HistoryBean.TIME + " DESC");
 		int url = myCursor.getColumnIndex(HistoryBean.URL);
