@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="45.0dip"
-	android:background="@drawable/bg_title_bar"
+	android:background="@color/moe_green"
 	android:gravity="center_vertical">
 
 	<ImageView
@@ -16,12 +16,6 @@
 		android:gravity="center"
 		android:src="@drawable/ic_top_bar_category"/>
 
-	<ImageView
-		android:layout_width="wrap_content"
-		android:layout_height="fill_parent"
-		android:layout_toRightOf="@id/title_bar_menu_btn"
-		android:background="@drawable/ic_top_divider"/>
-
 	<Button
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
@@ -33,11 +27,6 @@
 		android:textSize="20sp"
 		android:textColor="#000000"
 		android:id="@+id/title_bar_search_btn"/>
-
-	<ImageView
-		android:layout_width="wrap_content"
-		android:layout_height="fill_parent"
-		android:background="@drawable/ic_top_divider"/>
 
 	<ImageButton
 		android:layout_height="wrap_content"

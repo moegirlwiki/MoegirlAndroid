@@ -8,7 +8,7 @@
 	<LinearLayout
 		android:layout_width="fill_parent"
 		android:layout_height="45dip"
-		android:background="@drawable/bg_title_bar"
+		android:background="@color/moe_green"
 		android:orientation="horizontal">
 
 		<ImageButton
@@ -20,12 +20,6 @@
 			android:id="@+id/search_btnReturn"
 			android:padding="4dp"/>
 
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="fill_parent"
-			android:layout_toRightOf="@id/search_btnReturn"
-			android:background="@drawable/ic_top_divider"/>
-
 		<EditText
 			android:layout_marginLeft="3.0dip"
 			android:layout_marginRight="3.0dip"
@@ -35,7 +29,8 @@
 			android:layout_width="match_parent"
 			android:id="@+id/searchEditText1"
 			android:imeOptions="actionGo"
-			android:singleLine="true"/>
+			android:singleLine="true"
+			android:background="@null"/>
 
 	</LinearLayout>
 

@@ -8,7 +8,7 @@
 	<RelativeLayout
 		android:layout_width="fill_parent"
 		android:layout_height="45dip"
-		android:background="@drawable/bg_title_bar">
+		android:background="@color/moe_green">
 
 		<TextView
 			android:layout_width="wrap_content"
@@ -16,7 +16,7 @@
 			android:layout_centerInParent="true"
 			android:layout_marginTop="8dip"
 			android:text="@string/history"
-			android:textColor="@color/white"
+			android:textColor="@color/black"
 			android:textSize="18sp"/>
 
 		<LinearLayout
@@ -34,7 +34,7 @@
 			<Button
 				android:layout_height="wrap_content"
 				android:text="清除"
-				android:textColor="@color/white"
+				android:textColor="@color/black"
 				android:textSize="16sp"
 				android:layout_width="wrap_content"
 				android:background="@android:color/transparent"
