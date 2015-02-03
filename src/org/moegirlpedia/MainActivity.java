@@ -23,19 +23,21 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements OnClickListener, OnMenuItemClickListener
-{
+import com.baidu.mobstat.StatService;
+
+public class MainActivity extends Activity implements OnClickListener,
+		OnMenuItemClickListener {
 	private DrawerLayout drawerLeft;
 	private MyWebView mWebView;
 	private PopupMenu pop;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.main);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.layout_title_bar);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
+				R.layout.layout_title_bar);
 
 		drawerLeft = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ImageView menuImg = (ImageView) findViewById(R.id.title_bar_menu_btn);
@@ -57,54 +59,50 @@ public class MainActivity extends Activity implements OnClickListener, OnMenuIte
 		ImageButton btnMore = (ImageButton) findViewById(R.id.title_bar_more_btn);
 		btnMore.setOnClickListener(this);
 
-		pop = new PopupMenu(this, btnMore);  
+		pop = new PopupMenu(this, btnMore);
 		pop.getMenuInflater().inflate(R.menu.main, pop.getMenu());
 		pop.setOnMenuItemClickListener(this);
 
-		ProgressBar mprogressBar = (ProgressBar) this.findViewById(R.id.mProgress);
+		ProgressBar mprogressBar = (ProgressBar) this
+				.findViewById(R.id.mProgress);
 
 		mWebView = (MyWebView) this.findViewById(R.id.web);
 		mWebView.setProgressBar(mprogressBar);
 
-		android.webkit.CookieSyncManager.createInstance(this);// unrelated, just make sure cookies are generally allowed
+		android.webkit.CookieSyncManager.createInstance(this);// unrelated, just
+																// make sure
+																// cookies are
+																// generally
+																// allowed
 		android.webkit.CookieManager.getInstance().setAcceptCookie(true);
-		
+
 		// magic starts here
-		WebkitCookieManagerProxy coreCookieManager = new WebkitCookieManagerProxy(null, java.net.CookiePolicy.ACCEPT_ALL);
+		WebkitCookieManagerProxy coreCookieManager = new WebkitCookieManagerProxy(
+				null, java.net.CookiePolicy.ACCEPT_ALL);
 		java.net.CookieHandler.setDefault(coreCookieManager);
 
-		if (savedInstanceState == null)
-		{
+		if (savedInstanceState == null) {
 			mWebView.loadUrl(getString(R.string.baseurl) + "Mainpage");
-		}
-		else
-		{
+		} else {
 			mWebView.restoreState(savedInstanceState);
 		}
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
-		if (keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			if (!drawerLeft.isDrawerOpen(GravityCompat.START))
-			{
-				if (mWebView.canGoBack())
-				{
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (!drawerLeft.isDrawerOpen(GravityCompat.START)) {
+				if (mWebView.canGoBack()) {
 					mWebView.goBack();
 					return true;
 				}
-			}
-			else
-			{
+			} else {
 				drawerLeft.closeDrawer(GravityCompat.START);
 				return true;
 			}
 		}
-		if (keyCode == KeyEvent.KEYCODE_MENU)
-		{
+		if (keyCode == KeyEvent.KEYCODE_MENU) {
 			if (!drawerLeft.isDrawerOpen(GravityCompat.START))
 				drawerLeft.openDrawer(GravityCompat.START);
 			else
@@ -115,129 +113,137 @@ public class MainActivity extends Activity implements OnClickListener, OnMenuIte
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState)
-	{
+	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		mWebView.saveState(outState);
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{  
-		switch (resultCode)
-		{
-			case RESULT_OK:  
-				Bundle d=data.getExtras();
-				String url=d.getString("url");
-				mWebView.loadUrl(url);
-				if (drawerLeft.isDrawerOpen(GravityCompat.START))
-				{
-					drawerLeft.closeDrawer(GravityCompat.START);
-				}
-				break;  
-			default:  
-				break;  
-		}  
-	}  
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (resultCode) {
+		case RESULT_OK:
+			Bundle d = data.getExtras();
+			String url = d.getString("url");
+			mWebView.loadUrl(url);
+			if (drawerLeft.isDrawerOpen(GravityCompat.START)) {
+				drawerLeft.closeDrawer(GravityCompat.START);
+			}
+			break;
+		default:
+			break;
+		}
+	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig)
-	{
+	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 
 	}
 
 	@Override
-    public boolean onMenuItemClick(MenuItem item)
-	{
-        switch (item.getItemId())
-		{
-			case R.id.share:
-				mWebView.share();
-				break;
-			case R.id.refresh:
-				mWebView.refresh();
-				break;
-			case R.id.openinbrowser:
-				mWebView.openInBrowser();
-				break;
-			case R.id.edit:
-				mWebView.gotoEdit();
-				break;
-			case R.id.addbookmark:
-				mWebView.addBookmark();
-				break;
-			case R.id.about:
-				LayoutInflater inflater = getLayoutInflater();
-				View aboutLayout = inflater.inflate(R.layout.about,
-													(ViewGroup) findViewById(R.layout.about));
-				TextView a1 = (TextView) aboutLayout.findViewById(R.id.textView1);
-				a1.setMovementMethod(LinkMovementMethod.getInstance());
-				// a1.setText(Html.fromHtml(getResources().getString(
-				// R.string.about_text)));
+	public boolean onMenuItemClick(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.share:
+			mWebView.share();
+			break;
+		case R.id.refresh:
+			mWebView.refresh();
+			break;
+		case R.id.openinbrowser:
+			mWebView.openInBrowser();
+			break;
+		case R.id.edit:
+			mWebView.gotoEdit();
+			break;
+		case R.id.addbookmark:
+			mWebView.addBookmark();
+			break;
+		case R.id.about:
+			LayoutInflater inflater = getLayoutInflater();
+			View aboutLayout = inflater.inflate(R.layout.about,
+					(ViewGroup) findViewById(R.layout.about));
+			TextView a1 = (TextView) aboutLayout.findViewById(R.id.textView1);
+			a1.setMovementMethod(LinkMovementMethod.getInstance());
+			// a1.setText(Html.fromHtml(getResources().getString(
+			// R.string.about_text)));
 
-				new AlertDialog.Builder(this).setTitle("关于").setView(aboutLayout)
+			new AlertDialog.Builder(this).setTitle("关于").setView(aboutLayout)
 					.setPositiveButton("确定", null).show();
-				break;
+			break;
 
-			default:
-				break;
-        }
-        return false;
-    }
+		default:
+			break;
+		}
+		return false;
+	}
 
 	@Override
-	public void onClick(View v)
-	{
-		switch (v.getId())
-		{
-			case R.id.title_bar_menu_btn:
-				if (drawerLeft.isDrawerOpen(GravityCompat.START))
-				{
-					drawerLeft.closeDrawer(GravityCompat.START);
-				}
-				else
-				{
-					drawerLeft.openDrawer(GravityCompat.START);
-				}
-				break;
-			case R.id.menuRandom:
-				closeDrawerLeft();
-				mWebView.loadUrl(getString(R.string.baseurl)+"Special:%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2?action=render");
-				break;
-			case R.id.menuBookmark:
-				Intent bintent = new Intent(MainActivity.this, Bookmark.class);
-				startActivityForResult(bintent, 0);
-				break;
-			case R.id.menuHistory:
-				Intent hintent = new Intent(MainActivity.this, History.class);
-				startActivityForResult(hintent, 0); 
-				break;
-			case R.id.menuSettings:
-				startActivity(new Intent(MainActivity.this, SettingActivity.class)); 
-				break;
-			case R.id.menuQuit:
-				mWebView.clear();
-				finish();
-				break;
-			case R.id.menuLogin:
-				closeDrawerLeft();
-				mWebView.loadUrl("http://zh.moegirl.org/Special:%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95?returnto=Mainpage");
-				break;
-			case R.id.title_bar_search_btn:
-				Intent sintent = new Intent(MainActivity.this, Search.class);
-				startActivityForResult(sintent, 0); 
-				break;
-			case R.id.title_bar_more_btn:
-				pop.show();
-				break;
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.title_bar_menu_btn:
+			if (drawerLeft.isDrawerOpen(GravityCompat.START)) {
+				drawerLeft.closeDrawer(GravityCompat.START);
+			} else {
+				drawerLeft.openDrawer(GravityCompat.START);
+			}
+			break;
+		case R.id.menuRandom:
+			closeDrawerLeft();
+			mWebView.loadUrl(getString(R.string.baseurl)
+					+ "Special:%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2?action=render");
+			break;
+		case R.id.menuBookmark:
+			Intent bintent = new Intent(MainActivity.this, Bookmark.class);
+			startActivityForResult(bintent, 0);
+			break;
+		case R.id.menuHistory:
+			Intent hintent = new Intent(MainActivity.this, History.class);
+			startActivityForResult(hintent, 0);
+			break;
+		case R.id.menuSettings:
+			startActivity(new Intent(MainActivity.this, SettingActivity.class));
+			break;
+		case R.id.menuQuit:
+			mWebView.clear();
+			finish();
+			break;
+		case R.id.menuLogin:
+			closeDrawerLeft();
+			mWebView.loadUrl("http://zh.moegirl.org/Special:%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95?returnto=Mainpage");
+			break;
+		case R.id.title_bar_search_btn:
+			Intent sintent = new Intent(MainActivity.this, Search.class);
+			startActivityForResult(sintent, 0);
+			break;
+		case R.id.title_bar_more_btn:
+			pop.show();
+			break;
 		}
 
 	}
 
-	private void closeDrawerLeft()
-	{
+	private void closeDrawerLeft() {
 		drawerLeft.closeDrawer(GravityCompat.START);
+	}
+
+	public void onResume() {
+		super.onResume();
+
+		/**
+		 * 页面起始（每个Activity中都需要添加，如果有继承的父Activity中已经添加了该调用，那么子Activity中务必不能添加）
+		 * 不能与StatService.onPageStart一级onPageEnd函数交叉使用
+		 */
+		StatService.onResume(this);
+	}
+
+	public void onPause() {
+		super.onPause();
+
+		/**
+		 * 页面结束（每个Activity中都需要添加，如果有继承的父Activity中已经添加了该调用，那么子Activity中务必不能添加）
+		 * 不能与StatService.onPageStart一级onPageEnd函数交叉使用
+		 */
+		StatService.onPause(this);
 	}
 
 }
