@@ -16,9 +16,10 @@
 			android:layout_width="wrap_content"
 			android:layout_marginTop="3.0dip"
 			android:background="@android:color/transparent"
-			android:src="@android:drawable/ic_menu_revert"
+			android:src="@drawable/ic_back"
 			android:id="@+id/search_btnReturn"
-			android:padding="4dp"/>
+			android:padding="4dp"
+			android:paddingLeft="6dp"/>
 
 		<EditText
 			android:layout_marginLeft="3.0dip"

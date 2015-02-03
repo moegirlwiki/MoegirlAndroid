@@ -371,7 +371,7 @@ public class MyWebView extends WebView
 			Toast.makeText(getContext(), "本页无法编辑！", Toast.LENGTH_LONG).show();
 			return;
 		}
-		this.loadUrl(curr_url.replace("action=render", "action=edit"));
+		callBrowser(curr_url.replace("action=render", "action=edit"));
 	}
 
 	public void addBookmark()
