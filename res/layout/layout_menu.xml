@@ -4,7 +4,7 @@
 	android:layout_width="240dip"
 	android:layout_height="fill_parent"
 	android:layout_gravity="start"
-	android:background="@drawable/bitmap_book_read_chapterlist_repeat"
+	android:background="@color/moe_green_dan"
 	android:orientation="vertical">
 
 	<ScrollView
@@ -19,16 +19,6 @@
 
 			<TextView
 				android:layout_width="240dip"
-				android:layout_height="28.0dip"
-				android:background="#ff313131"
-				android:gravity="center_vertical"
-				android:paddingLeft="15.0dip"
-				android:text="常用"
-				android:textColor="#ff959595"
-				android:textSize="14.0sp"/>
-
-			<TextView
-				android:layout_width="240dip"
 				android:layout_height="50.0dip"
 				android:background="@drawable/selector_category_item"
 				android:clickable="true"
@@ -36,15 +26,10 @@
 				android:paddingLeft="15.0dip"
 				android:paddingRight="10.0dip"
 				android:text="登录"
-				android:textColor="#ff959595"
+				android:textColor="@color/black"
 				android:textSize="16.0sp"
 				android:id="@+id/menuLogin"/>
 
-			<View
-				android:layout_width="240dip"
-				android:layout_height="2.0dip"
-				android:background="@drawable/ic_shelf_category_divider"/>
-			
 			<TextView
 				android:layout_width="240dip"
 				android:layout_height="50.0dip"
@@ -54,14 +39,9 @@
 				android:paddingLeft="15.0dip"
 				android:paddingRight="10.0dip"
 				android:text="随机页面"
-				android:textColor="#ff959595"
+				android:textColor="@color/black"
 				android:textSize="16.0sp"
 				android:id="@+id/menuRandom"/>
-
-			<View
-				android:layout_width="240dip"
-				android:layout_height="2.0dip"
-				android:background="@drawable/ic_shelf_category_divider"/>
 
 			<TextView
 				android:layout_width="240dip"
@@ -72,14 +52,9 @@
 				android:paddingLeft="15.0dip"
 				android:paddingRight="10.0dip"
 				android:text="@string/bookmark"
-				android:textColor="#ff959595"
+				android:textColor="@color/black"
 				android:textSize="16.0sp"
 				android:id="@+id/menuBookmark"/>
-
-			<View
-				android:layout_width="240dip"
-				android:layout_height="2.0dip"
-				android:background="@drawable/ic_shelf_category_divider"/>
 
 			<TextView
 				android:layout_width="240dip"
@@ -90,14 +65,9 @@
 				android:paddingLeft="15.0dip"
 				android:paddingRight="10.0dip"
 				android:text="@string/history"
-				android:textColor="#ff959595"
+				android:textColor="@color/black"
 				android:textSize="16.0sp"
 				android:id="@+id/menuHistory"/>
-
-			<View
-				android:layout_width="240dip"
-				android:layout_height="2.0dip"
-				android:background="@drawable/ic_shelf_category_divider"/>
 
 			<TextView
 				android:layout_width="240dip"
@@ -108,15 +78,10 @@
 				android:paddingLeft="15.0dip"
 				android:paddingRight="10.0dip"
 				android:text="设置"
-				android:textColor="#ff959595"
+				android:textColor="@color/black"
 				android:textSize="16.0sp"
 				android:id="@+id/menuSettings"/>
 
-			<View
-				android:layout_width="240dip"
-				android:layout_height="2.0dip"
-				android:background="@drawable/ic_shelf_category_divider"/>
-			
 			<TextView
 				android:layout_width="240dip"
 				android:layout_height="50.0dip"
@@ -126,14 +91,9 @@
 				android:paddingLeft="15.0dip"
 				android:paddingRight="10.0dip"
 				android:text="退出"
-				android:textColor="#ff959595"
+				android:textColor="@color/black"
 				android:textSize="16.0sp"
 				android:id="@+id/menuQuit"/>
-
-			<View
-				android:layout_width="240dip"
-				android:layout_height="2.0dip"
-				android:background="@drawable/ic_shelf_category_divider"/>
 
 		</LinearLayout>
 

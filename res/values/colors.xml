@@ -2,6 +2,7 @@
 <resources>
 	<color name="color_button_click">#FFA500</color>
 	<color name="moe_green">#78D186</color>
+	<color name="moe_green_dan">#B4E4BB</color>
     <color name="color_0">#dedede</color>
     <color name="color_1">#7cc576</color>
     <color name="color_2">#2a4253</color>
