@@ -26,6 +26,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ImageButton;
 import android.widget.SimpleAdapter;
 
 public class History extends Activity
@@ -42,6 +43,13 @@ public class History extends Activity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.page_history);
+		ImageButton btnReturn = (ImageButton) findViewById(R.id.history_btnReturn);
+		btnReturn.setOnClickListener(new OnClickListener() {
+				public void onClick(View v)
+				{
+					finish();
+				}
+			});
 		init();
 	}
 

@@ -18,8 +18,7 @@
 			android:background="@android:color/transparent"
 			android:src="@drawable/ic_back"
 			android:id="@+id/search_btnReturn"
-			android:padding="4dp"
-			android:paddingLeft="6dp"/>
+			android:padding="4dp"/>
 
 		<EditText
 			android:layout_marginLeft="3.0dip"

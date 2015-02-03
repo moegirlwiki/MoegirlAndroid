@@ -17,12 +17,14 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ImageButton;
 import android.widget.SimpleAdapter;
 
 public class Bookmark extends Activity
@@ -39,6 +41,13 @@ public class Bookmark extends Activity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.page_bookmark);
+		ImageButton btnReturn = (ImageButton) findViewById(R.id.bookmark_btnReturn);
+		btnReturn.setOnClickListener(new OnClickListener() {
+				public void onClick(View v)
+				{
+					finish();
+				}
+			});
 		init();
 	}
 
