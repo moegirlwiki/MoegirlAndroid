@@ -68,6 +68,7 @@ public class MyWebView extends WebView {
 		this.getSettings().setJavaScriptEnabled(true);
 		this.getSettings().setUseWideViewPort(false);
 		this.getSettings().setBuiltInZoomControls(true);
+		this.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 		this.getSettings().setDefaultTextEncodingName("utf-8");
 		// this.getSettings().setBlockNetworkImage(true);
 		// 设置缓存模式
@@ -205,6 +206,7 @@ public class MyWebView extends WebView {
 					// 打开URL链接
 					HttpURLConnection ucon = (HttpURLConnection) myURL
 							.openConnection();
+					ucon.setUseCaches(true);
 					ucon.addRequestProperty("User-Agent", getContext()
 							.getString(R.string.useragent));
 					// 使用InputStream，从URLConnection读取数据
@@ -245,28 +247,26 @@ public class MyWebView extends WebView {
 				if (myString.isEmpty()) {
 					myString = errorPage;
 				} else {
-					if (myString.indexOf("<div id=\"mw-navigation\">") < 0) {
-
-						if (myString
-								.indexOf("title=\"Special:用户登录\">登录</a>才能查看其它页面。") < 0)
-							myString = pageHeader + "<h2>" + getTitle()
-									+ "</h2><hr>" + myString + pageFooter;
-						else
-							myString = "需要登陆";
+					if (myString.indexOf("登录</a>才能查看其它页面。") >= 0)
+						myString = "需要登录";
+					else if (myString.indexOf("<div id=\"mw-navigation\">") < 0) {
+						myString = pageHeader + "<h2>" + getTitle()
+								+ "</h2><hr>" + myString + pageFooter;
 					} else {
 						try {
 							Document doc = Jsoup.parse(myString);
 							Element content = doc
 									.getElementById("mw-content-text");
 							if (curr_url.indexOf("/Mainpage") < 0)
-								myString = oldcustomize + "<h2>" + getTitle()
-										+ "</h2><hr>" + content.html();
+								myString = oldcustomize + "<body>" + "<h2>" + getTitle()
+								+ "</h2><hr>" + content.html() + "</body>";
 							else
-								myString = "<meta name=\"viewport\" content=\"width=device-width, user-scalable=yes, initial-scale=0.9, maximum-scale=1.0, minimum-scale=0.9\">"
+								myString = "<meta name=\"viewport\" content=\"width=device-width, user-scalable=yes, initial-scale=0.9, maximum-scale=0.9, minimum-scale=0.9\">"
 										+ oldcustomize
+										+ "<body>"
 										+ "<h2>"
 										+ getTitle()
-										+ "</h2><hr>" + content.html();
+										+ "</h2><hr>" + content.html() + "</body>";
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

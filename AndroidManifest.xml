@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.moegirlpedia"
     android:versionCode="1"
-    android:versionName="1.5" >
+    android:versionName="2.0" >
 
     <uses-sdk 
         android:minSdkVersion="8" 
@@ -53,6 +53,12 @@
         </activity>
 		<activity
             android:name=".Search" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+		<activity
+            android:name=".Login" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

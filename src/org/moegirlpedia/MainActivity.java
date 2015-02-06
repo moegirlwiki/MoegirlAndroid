@@ -1,10 +1,19 @@
 package org.moegirlpedia;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+
+import org.apache.http.util.ByteArrayBuffer;
+import org.apache.http.util.EncodingUtils;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.method.LinkMovementMethod;
@@ -22,14 +31,18 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.mobstat.StatService;
 
 public class MainActivity extends Activity implements OnClickListener,
 		OnMenuItemClickListener {
+	private Handler mHandler = new Handler();
 	private DrawerLayout drawerLeft;
 	private MyWebView mWebView;
 	private PopupMenu pop;
+	private TextView menuLogin;
+	private TextView tvUsername;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +63,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		menuHistory.setOnClickListener(this);
 		TextView menuQuit = (TextView) findViewById(R.id.menuQuit);
 		menuQuit.setOnClickListener(this);
-		TextView menuLogin = (TextView) findViewById(R.id.menuLogin);
+		menuLogin = (TextView) findViewById(R.id.menuLogin);
 		menuLogin.setOnClickListener(this);
 		TextView menuSettings = (TextView) findViewById(R.id.menuSettings);
 		menuSettings.setOnClickListener(this);
@@ -58,6 +71,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		btnSearch.setOnClickListener(this);
 		ImageButton btnMore = (ImageButton) findViewById(R.id.title_bar_more_btn);
 		btnMore.setOnClickListener(this);
+		tvUsername = (TextView) findViewById(R.id.tvUsername);
 
 		pop = new PopupMenu(this, btnMore);
 		pop.getMenuInflater().inflate(R.menu.main, pop.getMenu());
@@ -69,11 +83,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		mWebView = (MyWebView) this.findViewById(R.id.web);
 		mWebView.setProgressBar(mprogressBar);
 
-		android.webkit.CookieSyncManager.createInstance(this);// unrelated, just
-																// make sure
-																// cookies are
-																// generally
-																// allowed
+		android.webkit.CookieSyncManager.createInstance(this);// 要保持cookie，需要先运行这句
 		android.webkit.CookieManager.getInstance().setAcceptCookie(true);
 
 		// magic starts here
@@ -86,6 +96,8 @@ public class MainActivity extends Activity implements OnClickListener,
 		} else {
 			mWebView.restoreState(savedInstanceState);
 		}
+		
+		detectLogin();
 	}
 
 	@Override
@@ -125,9 +137,11 @@ public class MainActivity extends Activity implements OnClickListener,
 			Bundle d = data.getExtras();
 			String url = d.getString("url");
 			mWebView.loadUrl(url);
-			if (drawerLeft.isDrawerOpen(GravityCompat.START)) {
-				drawerLeft.closeDrawer(GravityCompat.START);
-			}
+			closeDrawerLeft();
+			break;
+		case 20:
+			detectLogin();
+			closeDrawerLeft();
 			break;
 		default:
 			break;
@@ -208,8 +222,32 @@ public class MainActivity extends Activity implements OnClickListener,
 			finish();
 			break;
 		case R.id.menuLogin:
-			closeDrawerLeft();
-			mWebView.loadUrl("http://zh.moegirl.org/Special:%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95?returnto=Mainpage");
+			if (menuLogin.getText().equals(getString(R.string.login)))
+			{
+				Intent lintent = new Intent(MainActivity.this, Login.class);
+				startActivityForResult(lintent, 0);
+			}
+			else
+			{
+				menuLogin.setText(R.string.login);
+				closeDrawerLeft();
+				final String url = getString(R.string.baseurl) + "api.php?action=logout";
+				final MainActivity that = this;
+				new Thread(new Runnable() {
+						@Override
+						public void run()
+						{
+							fetchData(url);
+							mHandler.post(new Runnable() {
+									@Override
+									public void run() {
+										Toast.makeText(that,"退出成功",Toast.LENGTH_LONG).show();
+										detectLogin();
+									}
+								});
+						}
+					}).start();
+			}
 			break;
 		case R.id.title_bar_search_btn:
 			Intent sintent = new Intent(MainActivity.this, Search.class);
@@ -224,6 +262,88 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	private void closeDrawerLeft() {
 		drawerLeft.closeDrawer(GravityCompat.START);
+	}
+	
+	private void detectLogin()
+	{
+		String key = "moegirlSSOUserName=";
+		String cookie = android.webkit.CookieManager.getInstance().getCookie(getString(R.string.baseurl));
+		int pos = cookie.indexOf(key);
+		if (pos >= 0)
+			cookie = cookie.substring(pos + key.length(),cookie.length());
+		pos = cookie.indexOf(";");
+		if (pos >= 0)
+			cookie = cookie.substring(0,pos);
+		
+		final String Username = cookie;
+		final String url = getString(R.string.baseurl) + "api.php?format=json&action=query&meta=tokens";
+		new Thread(new Runnable() {
+				@Override
+				public void run()
+				{
+					String strResult = fetchData(url);
+					
+					if (strResult.indexOf("\"+\\\\\"") < 0)
+						{
+							//已登录
+							mHandler.post(new Runnable() {
+									@Override
+									public void run() {
+										menuLogin.setText(R.string.logout);
+										tvUsername.setText(Username);
+									}
+								});
+						}
+						else
+						{
+							mHandler.post(new Runnable() {
+									@Override
+									public void run() {
+										menuLogin.setText(R.string.login);
+										tvUsername.setText("");
+									}
+								});
+						}
+
+				}
+			}).start();
+	}
+	
+	private String fetchData(String url)
+	{
+		String myString = "";
+		try
+		{
+			// 定义获取文件内容的URL
+			URL myURL = new URL(url);
+			// 打开URL链接
+			URLConnection ucon = myURL.openConnection();
+			ucon.setConnectTimeout(10000);
+			ucon.setReadTimeout(20000);
+			ucon.addRequestProperty("User-Agent",
+									getString(R.string.useragent));
+			ucon.setUseCaches(false);
+
+			// 使用InputStream，从URLConnection读取数据
+			InputStream is = ucon.getInputStream();
+			BufferedInputStream bis = new BufferedInputStream(
+				is);
+			// 用ByteArrayBuffer缓存
+			ByteArrayBuffer baf = new ByteArrayBuffer(50);
+			int current = 0;
+			while ((current = bis.read()) != -1)
+			{
+				baf.append((byte) current);
+			}
+			// 将缓存的内容转化为String,用UTF-8编码
+			myString = EncodingUtils.getString(
+				baf.toByteArray(), "UTF-8");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return myString;
 	}
 
 	public void onResume() {

@@ -88,8 +88,6 @@ public class History extends Activity {
 				AlertDialog alertDialog = new AlertDialog.Builder(that)
 						.create();
 				alertDialog.setTitle("清空历史记录");
-				// prevents the user from escaping the dialog by hitting the
-				// Back button
 				alertDialog.setCancelable(true);
 				alertDialog.setMessage("确定吗？");
 				alertDialog.setButton("确定",
