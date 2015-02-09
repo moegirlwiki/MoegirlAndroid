@@ -2,8 +2,10 @@ package org.moegirlpedia;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EncodingUtils;
@@ -97,7 +99,6 @@ public class MainActivity extends Activity implements OnClickListener,
 			mWebView.restoreState(savedInstanceState);
 		}
 		
-		detectLogin();
 	}
 
 	@Override
@@ -266,15 +267,29 @@ public class MainActivity extends Activity implements OnClickListener,
 	
 	private void detectLogin()
 	{
+		tvUsername.setText("加载中...");
+		
 		String key = "moegirlSSOUserName=";
 		String cookie = android.webkit.CookieManager.getInstance().getCookie(getString(R.string.baseurl));
-		int pos = cookie.indexOf(key);
-		if (pos >= 0)
-			cookie = cookie.substring(pos + key.length(),cookie.length());
-		pos = cookie.indexOf(";");
-		if (pos >= 0)
-			cookie = cookie.substring(0,pos);
-		
+		if (cookie != null)
+		{
+			int pos = cookie.indexOf(key);
+			if (pos >= 0)
+				cookie = cookie.substring(pos + key.length(),cookie.length());
+			pos = cookie.indexOf(";");
+			if (pos >= 0)
+				cookie = cookie.substring(0,pos);
+			
+			try {
+				cookie = URLDecoder.decode(cookie, "utf-8");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+			cookie = "";
+			
 		final String Username = cookie;
 		final String url = getString(R.string.baseurl) + "api.php?format=json&action=query&meta=tokens";
 		new Thread(new Runnable() {
@@ -354,6 +369,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		 * 不能与StatService.onPageStart一级onPageEnd函数交叉使用
 		 */
 		StatService.onResume(this);
+		detectLogin();
 	}
 
 	public void onPause() {

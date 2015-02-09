@@ -15,6 +15,8 @@ import org.moegirlpedia.util.JsonUtil;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -53,6 +55,17 @@ public class Login extends Activity
 					finish();
 				}
 			});
+			
+		Button btnReg = (Button) findViewById(R.id.loginBtnReg);
+		btnReg.setOnClickListener(new OnClickListener() {
+				public void onClick(View v)
+				{
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					Uri content_url = Uri.parse(getString(R.string.baseurl) + "Special:%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95?type=signup");
+					intent.setData(content_url);
+					startActivity(intent);
+				}
+			});
 
 		edtUsername = (EditText) findViewById(R.id.loginEditTextUserName);
 		edtPassword = (EditText) findViewById(R.id.loginEditTextPassword);
@@ -68,8 +81,8 @@ public class Login extends Activity
 					String strPassword = "";
 					try
 					{
-						strUsername = URLEncoder.encode(edtUsername.getText().toString(), "utf-8");
-						strPassword = URLEncoder.encode(edtPassword.getText().toString(), "utf-8");
+						strUsername = URLEncoder.encode(edtUsername.getText().toString(), "utf-8").replace("+", "%20");
+						strPassword = URLEncoder.encode(edtPassword.getText().toString(), "utf-8").replace("+", "%20");
 					}
 					catch (UnsupportedEncodingException e)
 					{

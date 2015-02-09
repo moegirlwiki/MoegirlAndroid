@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.moegirlpedia"
-    android:versionCode="1"
+    android:versionCode="3"
     android:versionName="2.0" >
 
     <uses-sdk 
         android:minSdkVersion="8" 
-        android:targetSdkVersion="21" />
+        android:targetSdkVersion="19" />
 
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
