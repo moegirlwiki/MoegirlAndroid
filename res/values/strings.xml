@@ -3,6 +3,8 @@
 
     <string name="app_name">萌娘百科Mobile</string>
 	<string name="baseurl">http://zh.moegirl.org/</string>
+	<string name="versionurl">http://geziang.r.gp/moegirlpedia.txt</string>
+	<string name="downloadurl">http://apk.hiapk.com/appinfo/org.moegirlpedia</string>
 	<string name="useragent">MoeGirlMobile/2.0</string>
 	<string name="login">登录</string>
 	<string name="logout">退出登录</string>

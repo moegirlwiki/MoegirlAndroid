@@ -35,7 +35,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.moegirlpedia.util.VersionUtil;
 import com.baidu.mobstat.StatService;
+import android.content.*;
+import android.net.*;
 
 public class MainActivity extends Activity implements OnClickListener,
 		OnMenuItemClickListener {
@@ -99,6 +102,7 @@ public class MainActivity extends Activity implements OnClickListener,
 			mWebView.restoreState(savedInstanceState);
 		}
 		
+		checkUpdate();
 	}
 
 	@Override
@@ -320,6 +324,58 @@ public class MainActivity extends Activity implements OnClickListener,
 								});
 						}
 
+				}
+			}).start();
+	}
+	
+	private void checkUpdate()
+	{
+		final MainActivity that = this;
+		final String versionurl = getString(R.string.versionurl);
+		final String downloadurl = getString(R.string.downloadurl);
+		new Thread(new Runnable() {
+				@Override
+				public void run()
+				{
+					String strResult = fetchData(versionurl).trim();
+					if (strResult.isEmpty()) return;
+					Integer result = Integer.parseInt(strResult);
+
+					if (result > VersionUtil.getVersionCode(that))
+					{
+						//有新版本
+						mHandler.post(new Runnable() {
+								@Override
+								public void run() {
+									AlertDialog alertDialog = new AlertDialog.Builder(that)
+										.create();
+									alertDialog.setTitle("有新版本");
+									alertDialog.setCancelable(true);
+									alertDialog.setMessage("要更新吗？");
+									alertDialog.setButton("更新",
+										new DialogInterface.OnClickListener() {
+											public void onClick(DialogInterface dialog,
+																int which) {
+												Intent intent = new Intent(Intent.ACTION_VIEW);
+												Uri content_url = Uri.parse(downloadurl);
+												intent.setData(content_url);
+												that.startActivity(intent);
+											}
+										});
+									alertDialog.setButton2("不更新",
+										new DialogInterface.OnClickListener() {
+
+											@Override
+											public void onClick(DialogInterface dialog,
+																int which) {
+												// TODO Auto-generated method stub
+											}
+										});
+									alertDialog.show();
+								}
+							});
+					}
+					
 				}
 			}).start();
 	}

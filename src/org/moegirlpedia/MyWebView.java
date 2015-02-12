@@ -245,10 +245,10 @@ public class MyWebView extends WebView {
 						"&action=render", "?action=render");
 
 				if (myString.isEmpty()) {
-					myString = errorPage;
+					myString = errorPage.replace("%errorinfo%","网络错误");
 				} else {
 					if (myString.indexOf("登录</a>才能查看其它页面。") >= 0)
-						myString = "需要登录";
+						myString = errorPage.replace("%errorinfo%","需要登录");
 					else if (myString.indexOf("<div id=\"mw-navigation\">") < 0) {
 						myString = pageHeader + "<h2>" + getTitle()
 								+ "</h2><hr>" + myString + pageFooter;
