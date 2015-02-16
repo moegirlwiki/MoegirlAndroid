@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="240dip"
+	android:layout_height="fill_parent"
+	android:layout_gravity="end"
+	android:background="@color/moe_green_dan"
+	android:orientation="vertical">
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:text="加载中"
+		android:layout_width="match_parent"
+		android:textSize="24sp"
+		android:textColor="@color/black"
+		android:textStyle="bold"
+		android:gravity="center"
+		android:singleLine="true"
+		android:id="@+id/layoutindexTitle"/>
+
+	<ListView
+		android:id="@+id/index_list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:persistentDrawingCache="animation|scrolling"/>
+
+</LinearLayout>
+

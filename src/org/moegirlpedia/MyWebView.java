@@ -16,12 +16,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EncodingUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.moegirlpedia.database.SQLiteHelper;
 
 import android.content.Context;
@@ -42,15 +44,23 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MyWebView extends WebView {
 	private Boolean loaded = true;
 	private Handler mHandler = new Handler();
+	private ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
 	private SQLiteHelper sqliteHelper;
 	private SharedPreferences pref;
+	private ListView list = null;
 	private ProgressBar mprogressBar = null;
+	private TextView tvTitle = null;
 	private ArrayList<String> history_url = new ArrayList<String>();
 	private ArrayList<Integer> history_scroll = new ArrayList<Integer>();
 	private String curr_url = "";
@@ -85,6 +95,11 @@ public class MyWebView extends WebView {
 					callBrowser(url);
 					return true;
 				}
+				else if (url.indexOf("action=edit") >= 0)
+				{
+					that.gotoEdit();
+					return true;
+				}
 				if ((url.indexOf("?action=render") < 0)
 						&& (url.indexOf("?") < 0))
 					surl += "?action=render";
@@ -94,6 +109,29 @@ public class MyWebView extends WebView {
 
 			@Override
 			public void onPageFinished(WebView view, String url) {
+				mprogressBar.setProgress(90);
+				listItem.clear();
+				String content = GetCache(history_url.size());
+				Document doc = Jsoup.parse(content);
+				//Elements es = doc.getElementsByClass("mw-headline");
+				Element ep = doc.getElementById("toc");
+				if (ep != null)
+				{
+					Elements links = ep.getElementsByTag("a");
+					if (links != null)
+					{
+						for (Element link : links)
+						{
+							HashMap<String, Object> map = new HashMap<String, Object>();
+							map.put("IndexItem",link.text());
+							map.put("IndexId",link.attr("href").substring(1));
+							listItem.add(map);
+						}
+					}
+				}
+				setList();
+				tvTitle.setText(that.getTitle());
+				
 				loaded = true;
 				mprogressBar.setVisibility(View.GONE);
 				sqliteHelper.add_history(getContext(), that.getTitle(),
@@ -112,6 +150,12 @@ public class MyWebView extends WebView {
 
 	@Override
 	public void loadUrl(String url) {
+		if (url.startsWith("javascript:"))
+		{
+			super.loadUrl(url);
+			return;
+		}
+		
 		if (!url.isEmpty()) {
 			history_url.add(curr_url);
 			history_scroll.add(this.getScrollY());
@@ -130,8 +174,8 @@ public class MyWebView extends WebView {
 		int size = history_url.size();
 		int id = size - 1;
 		StoreCache(size, "");
-		String content = GetCache(id);
 		curr_url = history_url.get(id);
+		String content = GetCache(id);
 		history_url.remove(id);
 		loaded = false;
 		this.loadDataWithBaseURL(getBaseUrl(curr_url), content, "text/html",
@@ -174,6 +218,10 @@ public class MyWebView extends WebView {
 	}
 
 	private void fetchURL(final String url) {
+		tvTitle.setText("加载中");
+		listItem.clear();
+		setList();
+		
 		this.getSettings().setBlockNetworkImage(
 				!pref.getBoolean(
 						getContext().getString(R.string.settings_loadimage),
@@ -200,6 +248,7 @@ public class MyWebView extends WebView {
 				// TODO Auto-generated method stub
 				String realUrl = url;
 				String myString = "";
+				int responseCode = 0;
 				try {
 					// 定义获取文件内容的URL
 					URL myURL = new URL(url);
@@ -209,13 +258,9 @@ public class MyWebView extends WebView {
 					ucon.setUseCaches(true);
 					ucon.addRequestProperty("User-Agent", getContext()
 							.getString(R.string.useragent));
+					responseCode = ucon.getResponseCode();
 					// 使用InputStream，从URLConnection读取数据
-					InputStream is;
-					if (ucon.getResponseCode() == 404) {
-						is = ucon.getErrorStream();
-					} else {
-						is = ucon.getInputStream();
-					}
+					InputStream is = ucon.getInputStream();
 					BufferedInputStream bis = new BufferedInputStream(is);
 					// 用ByteArrayBuffer缓存
 					ByteArrayBuffer baf = new ByteArrayBuffer(50);
@@ -244,11 +289,13 @@ public class MyWebView extends WebView {
 				curr_url = realUrl.replace("index.php?title=", "").replace(
 						"&action=render", "?action=render");
 
-				if (myString.isEmpty()) {
+				if (responseCode == 404) {
+					myString = errorPage.replace("%errorinfo%","词条不存在");
+				} else if (myString.isEmpty()) {
 					myString = errorPage.replace("%errorinfo%","网络错误");
 				} else {
 					if (myString.indexOf("登录</a>才能查看其它页面。") >= 0)
-						myString = errorPage.replace("%errorinfo%","需要登录");
+						myString = errorPage.replace("%errorinfo%","内容比较糟糕，需要登录");
 					else if (myString.indexOf("<div id=\"mw-navigation\">") < 0) {
 						myString = pageHeader + "<h2>" + getTitle()
 								+ "</h2><hr>" + myString + pageFooter;
@@ -380,6 +427,7 @@ public class MyWebView extends WebView {
 	@Override
 	public WebBackForwardList restoreState(Bundle inState) {
 		WebBackForwardList ret = super.restoreState(inState);
+		
 		history_url = (ArrayList<String>) inState
 				.getSerializable("history_url");
 		history_scroll = (ArrayList<Integer>) inState
@@ -393,10 +441,40 @@ public class MyWebView extends WebView {
 		return ret;
 	}
 
+	public void setIndexListView(ListView lv) {
+		list = lv;
+		final MyWebView that = this;
+		// 添加点击
+		list.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+										long arg3) {
+					String id = (String) listItem.get(arg2).get("IndexId");
+					that.loadUrl("javascript:document.getElementById('" + id + "').scrollIntoView();");
+					((MainActivity) getContext()).closeDrawerRight();
+				}
+			});
+	}
+	
 	public void setProgressBar(ProgressBar pb) {
 		mprogressBar = pb;
 	}
 
+	public void setTextViewTitle(TextView tv) {
+		tvTitle = tv;
+	}
+	
+	private void setList() {
+		// 生成适配器的Item和动态数组对应的元素
+		SimpleAdapter listItemAdapter = new SimpleAdapter(getContext(), listItem,// 数据源
+														  R.layout.index_display_style,// ListItem的XML实现
+														  new String[] { "IndexItem" }, new int[] { R.id.IndexItem });
+
+		// 添加并且显示
+		list.setAdapter(listItemAdapter);
+	}
+	
 	private void callBrowser(final String url) {
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		Uri content_url = Uri.parse(url);
@@ -441,7 +519,7 @@ public class MyWebView extends WebView {
 		} catch (FileNotFoundException e) {
 			Log.e("TinyDB", "File not found!" + " " + id);
 			// e.printStackTrace();
-			return "null";
+			value = "";
 		} catch (StreamCorruptedException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -450,8 +528,8 @@ public class MyWebView extends WebView {
 			e.printStackTrace();
 		}
 		String ret = value.toString();
-		if (ret.trim().equals("null"))
-			ret = "";
+		if (ret.equals(""))
+			ret = getTitle();
 		return ret;
 	}
 

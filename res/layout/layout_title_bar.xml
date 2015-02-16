@@ -35,6 +35,16 @@
 		android:layout_centerVertical="true"
 		android:background="@android:color/transparent"
 		android:layout_width="wrap_content"
+		android:src="@drawable/ic_index"
+		android:id="@+id/title_bar_index_btn"/>
+
+	<ImageButton
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="3.0dip"
+		android:layout_marginRight="3.0dip"
+		android:layout_centerVertical="true"
+		android:background="@android:color/transparent"
+		android:layout_width="wrap_content"
 		android:src="@drawable/ic_menu"
 		android:id="@+id/title_bar_more_btn"/>
 

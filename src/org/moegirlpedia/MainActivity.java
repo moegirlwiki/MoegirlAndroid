@@ -9,11 +9,14 @@ import java.net.URLDecoder;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EncodingUtils;
+import org.moegirlpedia.util.VersionUtil;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.GravityCompat;
@@ -29,21 +32,19 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.moegirlpedia.util.VersionUtil;
 import com.baidu.mobstat.StatService;
-import android.content.*;
-import android.net.*;
 
 public class MainActivity extends Activity implements OnClickListener,
 		OnMenuItemClickListener {
 	private Handler mHandler = new Handler();
-	private DrawerLayout drawerLeft;
+	private DrawerLayout drawer;
 	private MyWebView mWebView;
 	private PopupMenu pop;
 	private TextView menuLogin;
@@ -57,7 +58,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.layout_title_bar);
 
-		drawerLeft = (DrawerLayout) findViewById(R.id.drawer_layout);
+		drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ImageView menuImg = (ImageView) findViewById(R.id.title_bar_menu_btn);
 		menuImg.setOnClickListener(this);
 		TextView menuRandom = (TextView) findViewById(R.id.menuRandom);
@@ -74,6 +75,8 @@ public class MainActivity extends Activity implements OnClickListener,
 		menuSettings.setOnClickListener(this);
 		Button btnSearch = (Button) findViewById(R.id.title_bar_search_btn);
 		btnSearch.setOnClickListener(this);
+		ImageButton btnIndex = (ImageButton) findViewById(R.id.title_bar_index_btn);
+		btnIndex.setOnClickListener(this);
 		ImageButton btnMore = (ImageButton) findViewById(R.id.title_bar_more_btn);
 		btnMore.setOnClickListener(this);
 		tvUsername = (TextView) findViewById(R.id.tvUsername);
@@ -84,9 +87,14 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		ProgressBar mprogressBar = (ProgressBar) this
 				.findViewById(R.id.mProgress);
-
+		TextView tvTitle = (TextView) this.findViewById(R.id.layoutindexTitle);
+		ListView list = (ListView) this.findViewById(R.id.index_list);
+		
 		mWebView = (MyWebView) this.findViewById(R.id.web);
 		mWebView.setProgressBar(mprogressBar);
+		mWebView.setTextViewTitle(tvTitle);
+		mWebView.setIndexListView(list);
+		
 
 		android.webkit.CookieSyncManager.createInstance(this);// 要保持cookie，需要先运行这句
 		android.webkit.CookieManager.getInstance().setAcceptCookie(true);
@@ -109,21 +117,25 @@ public class MainActivity extends Activity implements OnClickListener,
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (!drawerLeft.isDrawerOpen(GravityCompat.START)) {
+			if ((!drawer.isDrawerOpen(GravityCompat.START)) && (!drawer.isDrawerOpen(GravityCompat.END))) {
 				if (mWebView.canGoBack()) {
 					mWebView.goBack();
 					return true;
 				}
 			} else {
-				drawerLeft.closeDrawer(GravityCompat.START);
+				closeDrawerLeft();
+				closeDrawerRight();
 				return true;
 			}
 		}
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
-			if (!drawerLeft.isDrawerOpen(GravityCompat.START))
-				drawerLeft.openDrawer(GravityCompat.START);
+			if (!drawer.isDrawerOpen(GravityCompat.START))
+			{
+				closeDrawerRight();
+				drawer.openDrawer(GravityCompat.START);
+			}
 			else
-				drawerLeft.closeDrawer(GravityCompat.START);
+				closeDrawerLeft();
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
@@ -200,12 +212,21 @@ public class MainActivity extends Activity implements OnClickListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.title_bar_menu_btn:
-			if (drawerLeft.isDrawerOpen(GravityCompat.START)) {
-				drawerLeft.closeDrawer(GravityCompat.START);
+			if (drawer.isDrawerOpen(GravityCompat.START)) {
+				closeDrawerLeft();
 			} else {
-				drawerLeft.openDrawer(GravityCompat.START);
+				closeDrawerRight();
+				drawer.openDrawer(GravityCompat.START);
 			}
 			break;
+		case R.id.title_bar_index_btn:
+			if (drawer.isDrawerOpen(GravityCompat.END)) {
+				closeDrawerRight();
+			} else {
+				closeDrawerLeft();
+				drawer.openDrawer(GravityCompat.END);
+			}
+				break;
 		case R.id.menuRandom:
 			closeDrawerLeft();
 			mWebView.loadUrl(getString(R.string.baseurl)
@@ -266,7 +287,11 @@ public class MainActivity extends Activity implements OnClickListener,
 	}
 
 	private void closeDrawerLeft() {
-		drawerLeft.closeDrawer(GravityCompat.START);
+		drawer.closeDrawer(GravityCompat.START);
+	}
+	
+	public void closeDrawerRight() {
+		drawer.closeDrawer(GravityCompat.END);
 	}
 	
 	private void detectLogin()

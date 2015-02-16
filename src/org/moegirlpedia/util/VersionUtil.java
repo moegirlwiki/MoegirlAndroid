@@ -1,7 +1,7 @@
 package org.moegirlpedia.util;
 
-import android.content.*;
-import android.content.pm.*;
+import android.content.Context;
+import android.content.pm.PackageInfo;
 
 public class VersionUtil
 {

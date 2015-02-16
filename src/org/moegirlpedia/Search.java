@@ -140,7 +140,7 @@ public class Search extends Activity {
 							// 定义获取文件内容的URL
 							URL myURL = new URL(
 									getString(R.string.baseurl)
-											+ "api.php?action=opensearch&limit=100&search="
+											+ "api.php?format=json&action=opensearch&limit=100&search="
 											+ querytext);
 							// 打开URL链接
 							URLConnection ucon = myURL.openConnection();

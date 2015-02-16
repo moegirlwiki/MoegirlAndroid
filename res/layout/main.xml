@@ -49,6 +49,8 @@
 
         <include
 			layout="@layout/layout_menu"/>
+		<include
+			layout="@layout/layout_index"/>
     </android.support.v4.widget.DrawerLayout>
 
 </RelativeLayout>
