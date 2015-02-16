@@ -264,20 +264,15 @@ public class Search extends Activity {
 		if (myCursor.moveToFirst()) {
 			do {
 				HashMap<String, Object> item = new HashMap<String, Object>();
-				String nameencoded = myCursor.getString(name);;
-				String str = "";
+				String str = myCursor.getString(name);
 				try {
-					str = URLDecoder.decode(nameencoded, "utf-8");
+					str = URLDecoder.decode(str, "utf-8");
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//如果是旧版本数据或者为空就不显示
-				if ((!str.equals(nameencoded)) && (!str.isEmpty()))
-				{
-					item.put("ItemText", str);
-					listItem.add(item);
-				}
+				item.put("ItemText", str);
+				listItem.add(item);
 			} while (myCursor.moveToNext());
 		}
 		myCursor.close();
