@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -216,7 +217,14 @@ public class Search extends Activity {
 			}
 		});
 
-		get_Search_History();
+		try
+		{
+			get_Search_History();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		setList();
 
 	}
@@ -229,15 +237,16 @@ public class Search extends Activity {
 
 	private void ret() {
 		String name = edittext.getText().toString();
-		sqliteHelper.add_search_history(this, name);
-
-		String url = getString(R.string.baseurl);
 		try {
-			url += URLEncoder.encode(name, "utf-8").replace("+", "%20");
+			name = URLEncoder.encode(name, "utf-8").replace("+", "%20");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		sqliteHelper.add_search_history(this, name);
+
+		String url = getString(R.string.baseurl);
+		url += name;
 		url += "?action=render";
 		Intent intent = new Intent(Search.this, MainActivity.class);
 		intent.putExtra("url", url);
@@ -255,8 +264,20 @@ public class Search extends Activity {
 		if (myCursor.moveToFirst()) {
 			do {
 				HashMap<String, Object> item = new HashMap<String, Object>();
-				item.put("ItemText", myCursor.getString(name));
-				listItem.add(item);
+				String nameencoded = myCursor.getString(name);;
+				String str = "";
+				try {
+					str = URLDecoder.decode(nameencoded, "utf-8");
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//如果是旧版本数据或者为空就不显示
+				if ((!str.equals(nameencoded)) && (!str.isEmpty()))
+				{
+					item.put("ItemText", str);
+					listItem.add(item);
+				}
 			} while (myCursor.moveToNext());
 		}
 		myCursor.close();
