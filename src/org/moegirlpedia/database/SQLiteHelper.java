@@ -1,5 +1,8 @@
 package org.moegirlpedia.database;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -54,8 +57,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	}
 
 	// 添加历史记录--isbookmark=0表示非书签，普通历史记录；bookmark=1表示书签
-	public void add_history(Context context, String name, String url,
+	public void add_history(Context context, String strname, String url,
 			int isbookmark) {
+		String name = encodeName(strname);
 		String SQL = null;
 		String TIP = null;
 		int time = (int) Math.floor(System.currentTimeMillis() / 1000);
@@ -108,7 +112,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	}
 
 	// 添加搜索历史记录
-	public void add_search_history(Context context, String name) {
+	public void add_search_history(Context context, String strname) {
+		String name = encodeName(strname);
 		String SQL = null;
 		String TIP = null;
 		int time = (int) Math.floor(System.currentTimeMillis() / 1000);
@@ -139,9 +144,27 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	}
 
 	public void delete_single_record(String name) {
+		String nameencoded = encodeName(name);
 		String SQL = "delete from " + TB__HISTORY_NAME + " where name=" + "'"
-				+ name + "'";
+			+ nameencoded + "'";
 		SQLiteDatabase dbHelper = this.getWritableDatabase();
+		try {
+			dbHelper.execSQL(SQL);
+			Log.e("delete_single_record", "success");
+		} catch (Exception e) {
+			Log.e("delete_single_record", "failed");
+		}
+		SQL = "delete from " + TB__BOOKMARK_NAME + " where name=" + "'" + nameencoded
+			+ "'";
+		try {
+			dbHelper.execSQL(SQL);
+			Log.e("delete_single_record", "success");
+		} catch (Exception e) {
+			Log.e("delete_single_record", "failed");
+		}
+		//兼容旧版本数据，再执行一遍
+		SQL = "delete from " + TB__HISTORY_NAME + " where name=" + "'"
+				+ name + "'";
 		try {
 			dbHelper.execSQL(SQL);
 			Log.e("delete_single_record", "success");
@@ -158,6 +181,18 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		}
 	}
 
+	public String encodeName(String name)
+	{
+		String ret = "";
+		try {
+			ret = URLEncoder.encode(name, "utf-8").replace("+", "%20");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ret;
+	}
+	
 	public void clear_history() {
 		String SQL = "delete from " + TB__HISTORY_NAME + " where isbookmark=0";
 		SQLiteDatabase db = this.getWritableDatabase();

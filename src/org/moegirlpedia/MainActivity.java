@@ -363,8 +363,15 @@ public class MainActivity extends Activity implements OnClickListener,
 				public void run()
 				{
 					String strResult = fetchData(versionurl).trim();
-					if (strResult.isEmpty()) return;
-					Integer result = Integer.parseInt(strResult);
+					Integer result = 0;
+					try
+					{
+						result = Integer.parseInt(strResult);
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}
 
 					if (result > VersionUtil.getVersionCode(that))
 					{

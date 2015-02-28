@@ -237,14 +237,9 @@ public class Search extends Activity {
 
 	private void ret() {
 		String name = edittext.getText().toString();
-		try {
-			name = URLEncoder.encode(name, "utf-8").replace("+", "%20");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		sqliteHelper.add_search_history(this, name);
 
+		name = sqliteHelper.encodeName(name);
 		String url = getString(R.string.baseurl);
 		url += name;
 		url += "?action=render";

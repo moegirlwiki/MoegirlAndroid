@@ -1,5 +1,7 @@
 package org.moegirlpedia;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -102,8 +104,15 @@ public class Bookmark extends Activity {
 		history_data_list.clear();
 		if (myCursor.moveToFirst()) {
 			do {
+				String title = myCursor.getString(name);
+				try {
+					title = URLDecoder.decode(title, "utf-8");
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				HashMap<String, Object> item = new HashMap<String, Object>();
-				item.put("title", myCursor.getString(name));
+				item.put("title", title);
 				item.put("url", myCursor.getString(url));
 				history_data_list.add(item);
 			} while (myCursor.moveToNext());
